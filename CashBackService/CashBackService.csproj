@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CashBackDAO\CashBackDAO.csproj" />
+    <ProjectReference Include="..\CashBackObject\CashBackObject.csproj" />
+    <ProjectReference Include="..\CashBackRepositories\CashBackRepositories.csproj" />
+  </ItemGroup>
+
+</Project>

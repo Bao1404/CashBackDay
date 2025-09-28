@@ -1,0 +1,181 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Ví Của Tôi";
+}
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="page-title">
+                        <i class="fas fa-wallet me-3"></i>
+                        Ví Của Tôi
+                    </h1>
+                    <p class="page-subtitle">Quản lý các ví thanh toán và rút tiền</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addWalletModal">
+                        <i class="fas fa-plus me-2"></i>Thêm Ví Mới
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet Overview -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="summary-card primary">
+                    <div class="summary-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3 class="summary-number">3,250,000 VNĐ</h3>
+                        <p class="summary-label">Tổng Số Dư</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="summary-card success">
+                    <div class="summary-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3 class="summary-number">2,850,000 VNĐ</h3>
+                        <p class="summary-label">Có Thể Rút</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="summary-card warning">
+                    <div class="summary-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3 class="summary-number">400,000 VNĐ</h3>
+                        <p class="summary-label">Đang Xử Lý</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet Cards -->
+        <div class="row" id="walletContainer">
+            <!-- Wallet cards will be populated by JavaScript -->
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="data-card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-history me-2"></i>
+                    Giao Dịch Gần Đây
+                </h5>
+                <div class="card-actions">
+                    <a href="transaction-history.html" class="btn btn-outline-warning btn-sm">
+                        Xem Tất Cả <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Loại</th>
+                                <th>Ví</th>
+                                <th>Số Tiền</th>
+                                <th>Trạng Thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTransactionsBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Add Wallet Modal -->
+<div class="modal fade" id="addWalletModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Ví Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addWalletForm">
+                    <div class="mb-3">
+                        <label for="walletName" class="form-label">Tên Ví</label>
+                        <input type="text" class="form-control custom-input" id="walletName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="walletType" class="form-label">Loại Ví</label>
+                        <select class="form-select custom-input" id="walletType" required>
+                            <option value="">Chọn loại ví</option>
+                            <option value="bank">Tài Khoản Ngân Hàng</option>
+                            <option value="momo">Ví MoMo</option>
+                            <option value="zalopay">ZaloPay</option>
+                            <option value="crypto">Ví Crypto</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="walletAddress" class="form-label">Địa Chỉ/Số Tài Khoản</label>
+                        <input type="text" class="form-control custom-input" id="walletAddress" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="walletDescription" class="form-label">Mô Tả (Tùy chọn)</label>
+                        <textarea class="form-control custom-input" id="walletDescription" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-warning" onclick="addWallet()">Thêm Ví</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Withdraw Modal -->
+<div class="modal fade" id="withdrawModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Rút Tiền</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="withdrawForm">
+                    <div class="mb-3">
+                        <label for="withdrawWallet" class="form-label">Chọn Ví</label>
+                        <select class="form-select custom-input" id="withdrawWallet" required>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="withdrawAmount" class="form-label">Số Tiền Rút</label>
+                        <input type="number" class="form-control custom-input" id="withdrawAmount" min="50000" required>
+                        <div class="form-text">Số tiền tối thiểu: 50,000 VNĐ</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="withdrawNote" class="form-label">Ghi Chú (Tùy chọn)</label>
+                        <textarea class="form-control custom-input" id="withdrawNote" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-success" onclick="processWithdraw()">Xác Nhận Rút</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/wallets.js"></script>

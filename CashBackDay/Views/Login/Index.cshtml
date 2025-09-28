@@ -1,0 +1,175 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LoginRegisterLayout";
+    ViewData["Title"] = "Đăng Nhập";
+}
+
+<main class="auth-main">
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-10">
+                <div class="auth-container">
+                    <div class="row g-0">
+                        <!-- Left Side - Login Form -->
+                        <div class="col-lg-6">
+                            <div class="auth-form-section">
+                                <div class="auth-header text-center mb-4">
+                                    <h2 class="auth-title">Chào Mừng Trở Lại!</h2>
+                                    <p class="auth-subtitle">Đăng nhập để tiếp tục nhận hoàn tiền từ giao dịch</p>
+                                </div>
+
+                                <form id="loginForm" class="auth-form" method="POST" action="/Login">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">
+                                            <i class="fas fa-envelope me-2"></i>Email
+                                        </label>
+                                        <input type="email" class="form-control auth-input" id="email" name="email" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">
+                                            <i class="fas fa-lock me-2"></i>Mật khẩu
+                                        </label>
+                                        <div class="password-input-group">
+                                            <input type="password" class="form-control auth-input" id="password" name="password" required>
+                                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                                <i class="fas fa-eye" id="password-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                                            <label class="form-check-label" for="rememberMe">
+                                                Ghi nhớ đăng nhập
+                                            </label>
+                                        </div>
+                                        <a href="#" class="forgot-password-link" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                                            Quên mật khẩu?
+                                        </a>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-warning auth-btn w-100 mb-3">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Đăng Nhập
+                                    </button>
+
+                                    <div class="divider">
+                                        <span>Hoặc đăng nhập với</span>
+                                    </div>
+
+                                    <div class="social-login">
+                                        <a asp-action="ExternalLogin" asp-controller="Login" asp-route-provider="Google" type="button" class="btn btn-social btn-google" onclick="loginWithGoogle()">
+                                            <i class="fab fa-google me-2"></i>Google
+                                        </a>
+                                    </div>
+
+                                    <div class="auth-footer text-center mt-4">
+                                        <p class="mb-0">
+                                            Chưa có tài khoản?
+                                            <a asp-controller="Register" asp-action="Index" class="auth-link">Đăng ký ngay</a>
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Right Side - Info Section -->
+                        <!-- <div class="col-lg-6" style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);"> -->
+                        <div class="col-lg-6">
+                            <div class="auth-info-section">
+                                <div class="auth-info-content">
+                                    <div class="auth-info-icon mb-4">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <h3 class="auth-info-title">Tối Ưu Hóa Lợi Nhuận</h3>
+                                    <p class="auth-info-description">
+                                        Nhận lại đến 80% phí giao dịch từ các sàn chứng khoán và crypto hàng đầu.
+                                        Tự động hóa hoàn toàn, minh bạch và an toàn.
+                                    </p>
+
+                                    @* <div class="auth-stats">
+                                        <div class="stat-item">
+                                            <div class="stat-number">24,568+</div>
+                                            <div class="stat-label">Người dùng</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-number">12 Tỷ+</div>
+                                            <div class="stat-label">Đã hoàn tiền</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-number">15+</div>
+                                            <div class="stat-label">Sàn đối tác</div>
+                                        </div>
+                                    </div> *@
+
+                                    <div class="auth-features">
+                                        <div class="feature-item">
+                                            <i class="fas fa-shield-alt"></i>
+                                            <span>Bảo mật cao cấp</span>
+                                        </div>
+                                        <div class="feature-item">
+                                            <i class="fas fa-bolt"></i>
+                                            <span>Hoàn tiền tự động</span>
+                                        </div>
+                                        <div class="feature-item">
+                                            <i class="fas fa-headset"></i>
+                                            <span>Hỗ trợ 24/7</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Quên Mật Khẩu</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-4">
+                    Nhập email của bạn và chúng tôi sẽ gửi link đặt lại mật khẩu.
+                </p>
+                <form id="forgotPasswordForm">
+                    <div class="mb-3">
+                        <label for="resetEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control custom-input" id="resetEmail" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100">
+                        <i class="fas fa-paper-plane me-2"></i>Gửi Link Đặt Lại
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content custom-modal">
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                <h4>Đăng Nhập Thành Công!</h4>
+                <p class="text-muted">Chào mừng bạn trở lại PaybackDay.</p>
+                <button type="button" class="btn btn-warning" onclick="redirectToDashboard()">
+                    Tiếp Tục
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/site.js"></script>
+<script src="~/js/auth.js"></script>

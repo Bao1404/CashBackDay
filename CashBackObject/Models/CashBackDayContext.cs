@@ -1,0 +1,193 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace CashBackObject.Models;
+
+public partial class CashBackDayContext : DbContext
+{
+    public CashBackDayContext()
+    {
+    }
+
+    public CashBackDayContext(DbContextOptions<CashBackDayContext> options)
+        : base(options)
+    {
+    }
+
+    public virtual DbSet<AffiliateCommission> AffiliateCommissions { get; set; }
+
+    public virtual DbSet<RefundRequest> RefundRequests { get; set; }
+
+    public virtual DbSet<TradingFloor> TradingFloors { get; set; }
+
+    public virtual DbSet<TransactionHistory> TransactionHistories { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<Video> Videos { get; set; }
+
+    public virtual DbSet<Wallet> Wallets { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=BaoLT;Database=CashBackDay;User Id=sa;Password=12;TrustServerCertificate=true;Trusted_Connection=SSPI;Encrypt=false;");
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AffiliateCommission>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Affiliat__3214EC07B05390CF");
+
+            entity.Property(e => e.CommissionAmount).HasColumnType("decimal(18, 8)");
+            entity.Property(e => e.CommissionCurrency)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValue("USDT");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.ExternalRef)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.ReportingAccountId)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Floor).WithMany(p => p.AffiliateCommissions)
+                .HasForeignKey(d => d.FloorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Affiliate__Floor__35BCFE0A");
+        });
+
+        modelBuilder.Entity<RefundRequest>(entity =>
+        {
+            entity.HasKey(e => e.RequestId).HasName("PK__RefundRe__33A8517AA06C801E");
+
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 8)");
+            entity.Property(e => e.CryptoSymbol)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValue("USDT");
+            entity.Property(e => e.Note).HasMaxLength(500);
+            entity.Property(e => e.PaymentTxId)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.RequestDate).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Status)
+                .HasMaxLength(30)
+                .HasDefaultValue("Pending");
+
+            entity.HasOne(d => d.User).WithMany(p => p.RefundRequests)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__RefundReq__UserI__412EB0B6");
+        });
+
+        modelBuilder.Entity<TradingFloor>(entity =>
+        {
+            entity.HasKey(e => e.FloorId).HasName("PK__TradingF__49D1E84BD720CBA3");
+
+            entity.HasIndex(e => e.FloorName, "UQ__TradingF__3D098F355BD5352A").IsUnique();
+
+            entity.Property(e => e.FloorName).HasMaxLength(100);
+            entity.Property(e => e.FloorUrl).IsUnicode(false);
+            entity.Property(e => e.ImgUrl).IsUnicode(false);
+            entity.Property(e => e.InviteCode)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.RefundPercentage).HasColumnType("decimal(5, 2)");
+        });
+
+        modelBuilder.Entity<TransactionHistory>(entity =>
+        {
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A6B4D32A1A7");
+
+            entity.ToTable("TransactionHistory");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.CryptoSymbol)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.ExternalRef)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.Note).HasMaxLength(500);
+            entity.Property(e => e.OriginalFee).HasColumnType("decimal(18, 8)");
+            entity.Property(e => e.RebateFromExchange).HasColumnType("decimal(18, 8)");
+            entity.Property(e => e.RefundToUser).HasColumnType("decimal(18, 8)");
+            entity.Property(e => e.Status)
+                .HasMaxLength(30)
+                .HasDefaultValue("New");
+
+            entity.HasOne(d => d.Floor).WithMany(p => p.TransactionHistories)
+                .HasForeignKey(d => d.FloorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Transacti__Floor__3B75D760");
+
+            entity.HasOne(d => d.User).WithMany(p => p.TransactionHistories)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__Transacti__UserI__3A81B327");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CF7BFE5D8");
+
+            entity.HasIndex(e => e.Email, "UQ__Users__A9D10534D4018C14").IsUnique();
+
+            entity.Property(e => e.AvatarUrl)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.CreateAt).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.FullName).HasMaxLength(100);
+            entity.Property(e => e.Gender).HasMaxLength(10);
+            entity.Property(e => e.PasswordHash)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.Phone)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.Role)
+                .HasMaxLength(20)
+                .HasDefaultValue("User");
+            entity.Property(e => e.Status).HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<Video>(entity =>
+        {
+            entity.HasKey(e => e.VideoId).HasName("PK__Videos__BAE5126A564A0329");
+
+            entity.Property(e => e.Category).HasMaxLength(100);
+            entity.Property(e => e.Duration)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.ImgUrl).IsUnicode(false);
+            entity.Property(e => e.Title).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<Wallet>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Wallets__3214EC0789B36C8E");
+
+            entity.HasIndex(e => new { e.UserId, e.CryptoSymbol }, "UQ_Wallet_User_Crypto").IsUnique();
+
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 8)");
+            entity.Property(e => e.CryptoSymbol)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValue("USDT");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Wallets)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Wallets__UserId__30F848ED");
+        });
+
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}

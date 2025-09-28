@@ -1,0 +1,584 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+<main class="main-content">
+    <div class="container">
+        <!-- Profile Header -->
+        <!-- Profile Content -->
+        <div class="row mt-4">
+            <!-- Profile Navigation -->
+            <div class="col-lg-3 mb-4">
+                <div class="profile-nav">
+                    <div class="nav nav-pills flex-column" id="profile-tab" role="tablist">
+                        <button class="nav-link active" id="personal-info-tab" data-bs-toggle="pill" data-bs-target="#personal-info" type="button" role="tab">
+                            <i class="fas fa-user me-2"></i>Thông tin cá nhân
+                        </button>
+                        @* <button class="nav-link" id="account-settings-tab" data-bs-toggle="pill" data-bs-target="#account-settings" type="button" role="tab">
+                            <i class="fas fa-cog me-2"></i>Cài đặt tài khoản
+                        </button> *@
+                        <button class="nav-link" id="security-tab" data-bs-toggle="pill" data-bs-target="#security" type="button" role="tab">
+                            <i class="fas fa-shield-alt me-2"></i>Bảo mật
+                        </button>
+                        @* <button class="nav-link" id="notifications-tab" data-bs-toggle="pill" data-bs-target="#notifications" type="button" role="tab">
+                            <i class="fas fa-bell me-2"></i>Thông báo
+                        </button>
+                        <button class="nav-link" id="activity-tab" data-bs-toggle="pill" data-bs-target="#activity" type="button" role="tab">
+                            <i class="fas fa-history me-2"></i>Lịch sử hoạt động
+                        </button>
+                        <button class="nav-link" id="connected-accounts-tab" data-bs-toggle="pill" data-bs-target="#connected-accounts" type="button" role="tab">
+                            <i class="fas fa-link me-2"></i>Tài khoản liên kết
+                        </button> *@
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="col-lg-9">
+                <div class="tab-content" id="profile-tabContent">
+                    <!-- Personal Info Tab -->
+                    <div class="tab-pane fade show active" id="personal-info" role="tabpanel">
+                        <div class="data-card">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-user me-2"></i>
+                                    Thông tin cá nhân
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="personalInfoForm" method="POST" action="/Edit">
+                                    <div class="row">
+                                        <div class="mb-3">
+                                            <label for="fullName" class="form-label">Họ và Tên</label>
+                                            <input type="text" class="form-control custom-input" name="fullName" value="@Model.FullName">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control custom-input" name="email" value="@Model.Email" readonly>
+                                            <div class="form-text">Email không thể thay đổi</div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="phone" class="form-label">Số điện thoại</label>
+                                            <input type="tel" class="form-control custom-input" name="phone" value="@Model.Phone">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="birthDate" class="form-label">Ngày sinh</label>
+                                            <input type="date" class="form-control custom-input" name="dob" value="@(Model.Dob != null ? Model.Dob.ToString("yyyy-MM-dd") : "")">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="gender" class="form-label">Giới tính</label>
+                                            <select class="form-select custom-input" name="gender">
+                                                <option value="">Chọn giới tính</option>
+                                                @if (Model.Gender == "Nam")
+                                                {
+                                                    <option value="Nam" selected>@Model.Gender</option>
+                                                    <option value="Nữ">Nữ</option>
+                                                    <option value="Khác">Khác</option>
+                                                }
+                                                else if (Model.Gender == "Nữ")
+                                                {
+                                                    <option value="Nữ" selected>@Model.Gender</option>
+                                                    <option value="Nam">Nam</option>
+                                                    <option value="Khác">Khác</option>
+                                                }
+                                                else if (Model.Gender == "Khác")
+                                                {
+                                                    <option value="Khác" selected>@Model.Gender</option>
+                                                    <option value="Nam">Nam</option>
+                                                    <option value="Nữ">Nữ</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="Nam">Nam</option>
+                                                    <option value="Nữ">Nữ</option>
+                                                    <option value="Khác">Khác</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @* <div class="mb-3">
+                                        <label for="address" class="form-label">Địa chỉ</label>
+                                        <textarea class="form-control custom-input" id="address" rows="3">123 Đường ABC, Quận 1, TP.HCM</textarea>
+                                    </div> *@
+                                    <div class="mb-3">
+                                        <label for="bio" class="form-label">AvatarUrl</label>
+                                        <textarea class="form-control custom-input" name="avatarUrl" rows="3" >@Model.AvatarUrl</textarea>
+                                    </div>
+                                    <div class="text-end">
+                                        <a asp-action="Index" asp-controller="Profile" class="btn btn-secondary me-2">Hủy</a>
+                                        <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Settings Tab -->
+                    <div class="tab-pane fade" id="account-settings" role="tabpanel">
+                        <div class="data-card">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-cog me-2"></i>
+                                    Cài đặt tài khoản
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="setting-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6>Hiển thị công khai</h6>
+                                            <p class="text-muted mb-0">Cho phép người khác xem hồ sơ của bạn</p>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="publicProfile" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="setting-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6>Nhận email marketing</h6>
+                                            <p class="text-muted mb-0">Nhận thông tin về sản phẩm và khuyến mãi</p>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="marketingEmails">
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="setting-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6>Xác thực 2 bước</h6>
+                                            <p class="text-muted mb-0">Tăng cường bảo mật cho tài khoản</p>
+                                        </div>
+                                        <button class="btn btn-outline-warning btn-sm" onclick="setup2FA()">Thiết lập</button>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="setting-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6>Ngôn ngữ</h6>
+                                            <p class="text-muted mb-0">Chọn ngôn ngữ hiển thị</p>
+                                        </div>
+                                        <select class="form-select" style="width: auto;" id="language">
+                                            <option value="vi" selected>Tiếng Việt</option>
+                                            <option value="en">English</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="setting-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6>Múi giờ</h6>
+                                            <p class="text-muted mb-0">Múi giờ hiển thị dữ liệu</p>
+                                        </div>
+                                        <select class="form-select" style="width: auto;" id="timezone">
+                                            <option value="Asia/Ho_Chi_Minh" selected>GMT+7 (Việt Nam)</option>
+                                            <option value="Asia/Bangkok">GMT+7 (Bangkok)</option>
+                                            <option value="Asia/Singapore">GMT+8 (Singapore)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Tab -->
+                    <div class="tab-pane fade" id="security" role="tabpanel">
+                        <div class="row">
+                            <div class="mb-4">
+                                <div class="data-card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-key me-2"></i>
+                                            Thay đổi mật khẩu
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="changePasswordForm">
+                                            <div class="mb-3">
+                                                <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                                                <div class="password-input-group">
+                                                    <input type="password" class="form-control custom-input" id="currentPassword" required>
+                                                    <button type="button" class="password-toggle" onclick="togglePassword('currentPassword')">
+                                                        <i class="fas fa-eye" id="currentPassword-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                                                <div class="password-input-group">
+                                                    <input type="password" class="form-control custom-input" id="newPassword" required>
+                                                    <button type="button" class="password-toggle" onclick="togglePassword('newPassword')">
+                                                        <i class="fas fa-eye" id="newPassword-eye"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="password-strength mt-2">
+                                                    <div class="strength-bar">
+                                                        <div class="strength-fill" id="passwordStrengthFill"></div>
+                                                    </div>
+                                                    <small class="strength-text" id="passwordStrengthText">Nhập mật khẩu mới</small>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="confirmNewPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                                                <div class="password-input-group">
+                                                    <input type="password" class="form-control custom-input" id="confirmNewPassword" required>
+                                                    <button type="button" class="password-toggle" onclick="togglePassword('confirmNewPassword')">
+                                                        <i class="fas fa-eye" id="confirmNewPassword-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning w-100">Thay đổi mật khẩu</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            @* <div class="col-md-6 mb-4">
+                                <div class="data-card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-shield-alt me-2"></i>
+                                            Bảo mật tài khoản
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="security-item">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="security-icon success me-3">
+                                                    <i class="fas fa-check"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-1">Email đã xác thực</h6>
+                                                    <small class="text-muted">nguyenvana@email.com</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="security-item">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="security-icon success me-3">
+                                                    <i class="fas fa-check"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-1">Số điện thoại đã xác thực</h6>
+                                                    <small class="text-muted">0901234567</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="security-item">
+                                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="security-icon warning me-3">
+                                                        <i class="fas fa-exclamation"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-1">Xác thực 2 bước</h6>
+                                                        <small class="text-muted">Chưa thiết lập</small>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-outline-warning btn-sm" onclick="setup2FA()">Thiết lập</button>
+                                            </div>
+                                        </div>
+                                        <div class="security-item">
+                                            <h6 class="mb-2">Phiên đăng nhập gần đây</h6>
+                                            <div class="login-session">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <small class="fw-bold">Chrome trên Windows</small><br>
+                                                        <small class="text-muted">IP: 192.168.1.1 • Hôm nay, 14:30</small>
+                                                    </div>
+                                                    <span class="badge bg-success">Hiện tại</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> *@
+                        </div>
+                    </div>
+
+                    <!-- Notifications Tab -->
+                    <div class="tab-pane fade" id="notifications" role="tabpanel">
+                        <div class="data-card">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-bell me-2"></i>
+                                    Cài đặt thông báo
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="notification-category">
+                                    <h6 class="mb-3">Thông báo giao dịch</h6>
+                                    <div class="notification-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="form-label mb-1">Giao dịch mới</label>
+                                                <p class="text-muted mb-0 small">Thông báo khi có giao dịch mới</p>
+                                            </div>
+                                            <div class="notification-controls">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="newTransactionEmail" checked>
+                                                    <label class="form-check-label" for="newTransactionEmail">Email</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="newTransactionSMS">
+                                                    <label class="form-check-label" for="newTransactionSMS">SMS</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="form-label mb-1">Hoàn tiền thành công</label>
+                                                <p class="text-muted mb-0 small">Thông báo khi hoàn tiền thành công</p>
+                                            </div>
+                                            <div class="notification-controls">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="refundSuccessEmail" checked>
+                                                    <label class="form-check-label" for="refundSuccessEmail">Email</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="refundSuccessSMS" checked>
+                                                    <label class="form-check-label" for="refundSuccessSMS">SMS</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="notification-category">
+                                    <h6 class="mb-3">Thông báo hệ thống</h6>
+                                    <div class="notification-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="form-label mb-1">Cập nhật hệ thống</label>
+                                                <p class="text-muted mb-0 small">Thông báo về các cập nhật mới</p>
+                                            </div>
+                                            <div class="notification-controls">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="systemUpdateEmail">
+                                                    <label class="form-check-label" for="systemUpdateEmail">Email</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="form-label mb-1">Bảo trì hệ thống</label>
+                                                <p class="text-muted mb-0 small">Thông báo khi hệ thống bảo trì</p>
+                                            </div>
+                                            <div class="notification-controls">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="maintenanceEmail" checked>
+                                                    <label class="form-check-label" for="maintenanceEmail">Email</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="notification-category">
+                                    <h6 class="mb-3">Marketing</h6>
+                                    <div class="notification-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="form-label mb-1">Khuyến mãi</label>
+                                                <p class="text-muted mb-0 small">Nhận thông tin về các chương trình khuyến mãi</p>
+                                            </div>
+                                            <div class="notification-controls">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="promotionEmail">
+                                                    <label class="form-check-label" for="promotionEmail">Email</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-end mt-4">
+                                    <button type="button" class="btn btn-warning" onclick="saveNotificationSettings()">Lưu cài đặt</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Tab -->
+                    <div class="tab-pane fade" id="activity" role="tabpanel">
+                        <div class="data-card">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-history me-2"></i>
+                                    Lịch sử hoạt động
+                                </h5>
+                                <div class="card-actions">
+                                    <select class="form-select form-select-sm" id="activityFilter">
+                                        <option value="">Tất cả hoạt động</option>
+                                        <option value="login">Đăng nhập</option>
+                                        <option value="transaction">Giao dịch</option>
+                                        <option value="profile">Cập nhật hồ sơ</option>
+                                        <option value="security">Bảo mật</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-timeline" id="activityTimeline">
+                                    <!-- Activity items will be populated by JavaScript -->
+                                </div>
+                                <div class="text-center mt-4">
+                                    <button class="btn btn-outline-warning" onclick="loadMoreActivity()">Xem thêm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connected Accounts Tab -->
+                    <div class="tab-pane fade" id="connected-accounts" role="tabpanel">
+                        <div class="data-card">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-link me-2"></i>
+                                    Tài khoản liên kết
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="connected-account-item">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/placeholder.svg?height=40&width=40&text=VPS" alt="VPS Securities" class="connected-logo me-3">
+                                            <div>
+                                                <h6 class="mb-1">VPS Securities</h6>
+                                                <small class="text-muted">Tài khoản: 123456789</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-success me-2">Đã kết nối</span>
+                                            <button class="btn btn-outline-danger btn-sm" onclick="disconnectAccount('vps')">Ngắt kết nối</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="connected-account-item">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/placeholder.svg?height=40&width=40&text=SSI" alt="SSI Securities" class="connected-logo me-3">
+                                            <div>
+                                                <h6 class="mb-1">SSI Securities</h6>
+                                                <small class="text-muted">Tài khoản: 987654321</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-success me-2">Đã kết nối</span>
+                                            <button class="btn btn-outline-danger btn-sm" onclick="disconnectAccount('ssi')">Ngắt kết nối</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="connected-account-item">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/placeholder.svg?height=40&width=40&text=BIN" alt="Binance" class="connected-logo me-3">
+                                            <div>
+                                                <h6 class="mb-1">Binance</h6>
+                                                <small class="text-muted">Chưa kết nối</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-secondary me-2">Chưa kết nối</span>
+                                            <button class="btn btn-warning btn-sm" onclick="connectAccount('binance')">Kết nối</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="connected-account-item">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/placeholder.svg?height=40&width=40&text=HSC" alt="HSC Securities" class="connected-logo me-3">
+                                            <div>
+                                                <h6 class="mb-1">HSC Securities</h6>
+                                                <small class="text-muted">Chưa kết nối</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-secondary me-2">Chưa kết nối</span>
+                                            <button class="btn btn-warning btn-sm" onclick="connectAccount('hsc')">Kết nối</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Avatar Upload Modal -->
+<div class="modal fade" id="avatarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Thay đổi ảnh đại diện</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <img src="/placeholder.svg?height=150&width=150&text=Preview" alt="Preview" class="img-fluid rounded-circle" id="avatarPreview" style="width: 150px; height: 150px; object-fit: cover;">
+                </div>
+                <div class="mb-3">
+                    <label for="avatarFile" class="form-label">Chọn ảnh mới</label>
+                    <input type="file" class="form-control custom-input" id="avatarFile" accept="image/*" onchange="previewAvatar(this)">
+                    <div class="form-text">Chấp nhận file JPG, PNG. Kích thước tối đa 2MB.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-warning" onclick="uploadAvatar()">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2FA Setup Modal -->
+<div class="modal fade" id="twoFAModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Thiết lập xác thực 2 bước</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="qr-code-placeholder">
+                        <img src="/placeholder.svg?height=200&width=200&text=QR Code" alt="QR Code" class="img-fluid">
+                    </div>
+                    <p class="mt-3">Quét mã QR bằng ứng dụng Google Authenticator hoặc Authy</p>
+                </div>
+                <div class="mb-3">
+                    <label for="twoFACode" class="form-label">Nhập mã xác thực</label>
+                    <input type="text" class="form-control custom-input text-center" id="twoFACode" placeholder="000000" maxlength="6">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-warning" onclick="verify2FA()">Xác thực</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+

@@ -1,0 +1,287 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LoginRegisterLayout";
+    ViewData["Title"] = "Đăng Ký";
+}
+@model RegisterViewModel
+<main class="auth-main">
+    <div class="container mb-5 mt-5">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-10">
+                <div class="auth-container">
+                    <div class="row g-0">
+                        <!-- Left Side - Info Section -->
+                        <div class="col-lg-6">
+                            <div class="auth-info-section">
+                                <div class="auth-info-content">
+                                    <div class="auth-info-icon mb-4">
+                                        <i class="fas fa-rocket"></i>
+                                    </div>
+                                    <h3 class="auth-info-title">Bắt Đầu Hành Trình</h3>
+                                    <p class="auth-info-description">
+                                        Tham gia cộng đồng hơn 24,000 nhà đầu tư thông minh đang tối ưu hóa
+                                        chi phí giao dịch với PaybackDay.
+                                    </p>
+
+                                    <div class="auth-benefits">
+                                        <div class="benefit-item">
+                                            <div class="benefit-icon">
+                                                <i class="fas fa-percentage"></i>
+                                            </div>
+                                            <div class="benefit-content">
+                                                <h6>Hoàn Tiền Cao</h6>
+                                                <p>Nhận lại đến 80% phí giao dịch</p>
+                                            </div>
+                                        </div>
+                                        <div class="benefit-item">
+                                            <div class="benefit-icon">
+                                                <i class="fas fa-magic"></i>
+                                            </div>
+                                            <div class="benefit-content">
+                                                <h6>Tự Động Hóa</h6>
+                                                <p>Hoàn tiền tự động trong 24h</p>
+                                            </div>
+                                        </div>
+                                        <div class="benefit-item">
+                                            <div class="benefit-icon">
+                                                <i class="fas fa-building"></i>
+                                            </div>
+                                            <div class="benefit-content">
+                                                <h6>Đa Sàn Giao Dịch</h6>
+                                                <p>Hỗ trợ 15+ sàn uy tín</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="auth-testimonial">
+                                        @* <div class="testimonial-content">
+                                            <i class="fas fa-quote-left"></i>
+                                            <p>"PaybackDay đã giúp tôi tiết kiệm hàng triệu đồng phí giao dịch mỗi tháng!"</p>
+                                        </div>
+                                        <div class="testimonial-author">
+                                            <img src="/placeholder.svg?height=40&width=40&text=User" alt="User">
+                                            <div>
+                                                <strong>Nguyễn Văn A</strong>
+                                                <small>Trader chuyên nghiệp</small>
+                                            </div>
+                                        </div> *@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Side - Register Form -->
+                        <div class="col-lg-6">
+                            <div class="auth-form-section">
+                                <div class="auth-header text-center mb-4">
+                                    <h2 class="auth-title">Tạo Tài Khoản Mới</h2>
+                                    <p class="auth-subtitle">Bắt đầu nhận hoàn tiền ngay hôm nay</p>
+                                </div>
+
+                                <!-- Registration Steps -->
+                                <div class="registration-steps mb-4">
+                                    <h4 class="text-danger">@ViewBag.ErrorMessage</h4>
+                                    @* <div class="step active" data-step="1">
+                                        <div class="step-number">1</div>
+                                        <div class="step-label">Thông tin cơ bản</div>
+                                    </div> *@
+                                    @* <div class="step" data-step="2">
+                                        <div class="step-number">2</div>
+                                        <div class="step-label">Xác thực</div>
+                                    </div> *@
+                                    @* <div class="step" data-step="2">
+                                        <div class="step-number">2</div>
+                                        <div class="step-label">Hoàn tất</div>
+                                    </div> *@
+                                </div>
+
+                                <form id="" class="auth-form" action="Register" method="POST">
+                                    <!-- Step 1: Basic Information -->
+                                    <div class="form-step active" id="step1">
+                                        <div class="row">
+                                            <div class="mb-3">
+                                                <label for="fullName" class="form-label">Họ và Tên</label>
+                                                <input type="text" class="form-control auth-input" id="fullName" asp-for="FullName" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="registerEmail" class="form-label">
+                                                <i class="fas fa-envelope me-2"></i>Email
+                                            </label>
+                                            <input type="email" class="form-control auth-input" id="registerEmail" asp-for="Email" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="phone" class="form-label">
+                                                <i class="fas fa-phone me-2"></i>Số điện thoại
+                                            </label>
+                                            <input type="tel" class="form-control auth-input" id="phone" asp-for="PhoneNumber" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="registerPassword" class="form-label">
+                                                <i class="fas fa-lock me-2"></i>Mật khẩu
+                                            </label>
+                                            <div class="password-input-group">
+                                                <input type="password" class="form-control auth-input" id="registerPassword" asp-for="Password" required>
+                                                <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">
+                                                    <i class="fas fa-eye" id="registerPassword-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="password-strength mt-2">
+                                                <div class="strength-bar">
+                                                    <div class="strength-fill" id="strengthFill"></div>
+                                                </div>
+                                                <small class="strength-text" id="strengthText">Nhập mật khẩu</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="confirmPassword" class="form-label">
+                                                <i class="fas fa-lock me-2"></i>Xác nhận mật khẩu
+                                            </label>
+                                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                            <div class="password-input-group">
+                                                <input type="password" class="form-control auth-input" id="confirmPassword" asp-for="ConfirmPassword" required>
+                                                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                                    <i class="fas fa-eye" id="confirmPassword-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                      @*   <button type="button" class="btn btn-warning auth-btn w-100" onclick="nextStep(2)">
+                                            Tiếp Theo <i class="fas fa-arrow-right ms-2"></i>
+                                        </button> *@
+                                        <button type="submit" class="btn btn-warning auth-btn w-100 flex-fill">
+                                            <i class="fas fa-user-plus me-2"></i>Tạo Tài Khoản
+                                        </button>
+                                    </div>
+
+                                    @* <!-- Step 2: Verification -->
+                                    <div class="form-step" id="step2">
+                                        <div class="verification-section text-center mb-4">
+                                            <div class="verification-icon mb-3">
+                                                <i class="fas fa-mobile-alt"></i>
+                                            </div>
+                                            <h5>Xác Thực Số Điện Thoại</h5>
+                                            <p class="text-muted">
+                                                Chúng tôi đã gửi mã xác thực đến số điện thoại của bạn
+                                            </p>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="verificationCode" class="form-label text-center w-100">
+                                                Nhập mã xác thực (6 chữ số)
+                                            </label>
+                                            <div class="verification-input">
+                                                <input type="text" class="form-control auth-input text-center"
+                                                       id="verificationCode" maxlength="6" placeholder="000000">
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center mb-4">
+                                            <p class="mb-2">Không nhận được mã?</p>
+                                            <button type="button" class="btn btn-link p-0" id="resendCode" onclick="resendVerificationCode()">
+                                                Gửi lại mã (<span id="countdown">60</span>s)
+                                            </button>
+                                        </div>
+
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-outline-secondary flex-fill" onclick="prevStep(1)">
+                                                <i class="fas fa-arrow-left me-2"></i>Quay Lại
+                                            </button>
+                                            <button type="button" class="btn btn-warning flex-fill" onclick="verifyCode()">
+                                                Xác Thực <i class="fas fa-check ms-2"></i>
+                                            </button>
+                                        </div>
+                                    </div> *@
+
+                                    <!-- Step 3: Complete -->
+                                    @* <div class="form-step" id="step2">
+                                        <div class="completion-section text-center">
+                                            <div class="completion-icon mb-3">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                            <h5>Hoàn Tất Đăng Ký</h5>
+                                            <p class="text-muted mb-4">
+                                                Đồng ý với điều khoản để hoàn tất quá trình đăng ký
+                                            </p>
+                                        </div>
+
+                                        <div class="terms-section mb-4">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                                <label class="form-check-label" for="agreeTerms">
+                                                    Tôi đồng ý với
+                                                    <a href="#" class="auth-link">Điều khoản sử dụng</a> và
+                                                    <a href="#" class="auth-link">Chính sách bảo mật</a>
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="agreeMarketing">
+                                                <label class="form-check-label" for="agreeMarketing">
+                                                    Tôi muốn nhận thông tin khuyến mãi và cập nhật từ PaybackDay
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-outline-secondary flex-fill" onclick="prevStep(1)">
+                                                <i class="fas fa-arrow-left me-2"></i>Quay Lại
+                                            </button>
+                                            <button type="submit" class="btn btn-warning flex-fill">
+                                                <i class="fas fa-user-plus me-2"></i>Tạo Tài Khoản
+                                            </button>
+                                        </div>
+                                    </div> *@
+                                </form>
+
+                                <div class="divider mt-4">
+                                    <span>Hoặc đăng ký với</span>
+                                </div>
+
+                                <div class="social-login">
+                                    <a asp-controller="Login" asp-action="ExternalLogin" class="btn btn-social btn-google" onclick="">
+                                        <i class="fab fa-google me-2"></i>Google
+                                    </a>
+                                </div>
+
+                                <div class="auth-footer text-center mt-4">
+                                    <p class="mb-0">
+                                        Đã có tài khoản?
+                                        <a asp-controller="Login" asp-action="Index" class="auth-link">Đăng nhập ngay</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Success Modal -->
+<div class="modal fade" id="registerSuccessModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content custom-modal">
+            <div class="modal-body text-center py-5">
+                <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
+                <h3>Chúc Mừng!</h3>
+                <p class="text-muted mb-4">
+                    Tài khoản của bạn đã được tạo thành công.<br>
+                    Chào mừng bạn đến với PaybackDay!
+                </p>
+                <button type="button" class="btn btn-warning btn-lg" onclick="redirectToDashboard()">
+                    <i class="fas fa-rocket me-2"></i>Bắt Đầu Ngay
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/auth.js"></script>

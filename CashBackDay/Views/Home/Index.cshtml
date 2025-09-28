@@ -1,0 +1,343 @@
+﻿@{
+    var user = Context.Session.GetString("UserName");
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-7 hero-content">
+                <h1 class="hero-title">
+                    Hoàn tiền từ <span class="text-warning">phí giao dịch</span> chứng khoán
+                </h1>
+                <p class="hero-subtitle">
+                    Kết nối với PaybackDay để nhận hoàn tiền tự động từ phí giao dịch.
+                    Hỗ trợ tất cả sàn giao dịch hàng đầu Việt Nam.
+                </p>
+                @if (user == null)
+                {
+                    <div class="hero-buttons">
+                        <a asp-action="Index" asp-controller="Register" class="btn btn-warning btn-lg">
+                            <i class="fas fa-rocket me-2"></i>Bắt đầu ngay
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="section-title">Cách Thức <span class="text-warning">Hoạt Động</span></h2>
+                <p class="section-subtitle fade-in">Chỉ với 3 bước đơn giản để bắt đầu nhận hoàn tiền</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="step-card fade-in-stagger">
+                    <div class="step-icon">
+                        <i class="fas fa-user-plus"></i>
+                        <div class="step-number">1</div>
+                    </div>
+                    <h4 class="step-title">Đăng ký tài khoản</h4>
+                    <p class="step-description">
+                        Tạo tài khoản PaybackDay miễn phí chỉ trong vài phút.
+                        Xác thực thông tin để đảm bảo bảo mật.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="step-card fade-in-stagger">
+                    <div class="step-icon">
+                        <i class="fas fa-link"></i>
+                        <div class="step-number">2</div>
+                    </div>
+                    <h4 class="step-title">Kết nối sàn giao dịch</h4>
+                    <p class="step-description">
+                        Liên kết tài khoản giao dịch của bạn với PaybackDay.
+                        Hỗ trợ tất cả sàn giao dịch lớn tại Việt Nam.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="step-card fade-in-stagger">
+                    <div class="step-icon">
+                        <i class="fas fa-coins"></i>
+                        <div class="step-number">3</div>
+                    </div>
+                    <h4 class="step-title">Nhận hoàn tiền</h4>
+                    <p class="step-description">
+                        Giao dịch bình thường và nhận hoàn tiền tự động.
+                        Tiền được chuyển về ví trong vòng 24h.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trading Floors Section -->
+<section class="trading-floors-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-3">
+                <h2 class="section-title">Các Sàn Giao Dịch <span class="text-warning">Hợp Tác</span></h2>
+                <p class="section-subtitle fade-in">Kết nối với các sàn giao dịch hàng đầu Việt Nam</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="trading-floor-card fade-in-stagger">
+                    <div class="card-image">
+                        <img src="data:image/png;base64,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" alt="VPS Securities">
+                        <div class="refund-badge">Hoàn 30%</div>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">VPS Securities</h5>
+                        <p class="card-subtitle">Công ty Chứng khoán VPS</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success fw-bold">Đã kết nối</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="trading-floor-card fade-in-stagger">
+                    <div class="card-image">
+                        <img src="/placeholder.svg?height=200&width=400&text=SSI+Securities" alt="SSI Securities">
+                        <div class="refund-badge">Hoàn 25%</div>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">SSI Securities</h5>
+                        <p class="card-subtitle">Công ty Chứng khoán SSI</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success fw-bold">Đã kết nối</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="trading-floor-card fade-in-stagger">
+                    <div class="card-image">
+                        <img src="/placeholder.svg?height=200&width=400&text=HSC+Securities" alt="HSC Securities">
+                        <div class="refund-badge">Hoàn 35%</div>
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">HSC Securities</h5>
+                        <p class="card-subtitle">Công ty Chứng khoán HSC</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success fw-bold">Đã kết nối</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--
+                            <div class="col-lg-4 col-md-6">
+                                <div class="trading-floor-card fade-in-stagger">
+                                    <div class="card-image">
+                                        <img src="/placeholder.svg?height=200&width=400&text=More+Coming+Soon" alt="More Coming Soon">
+                                        <div class="refund-badge">Sắp có</div>
+                                    </div>
+                                    <div class="card-content">
+                                        <h5 class="card-title">Và nhiều sàn khác</h5>
+                                        <p class="card-subtitle">Chúng tôi đang mở rộng</p>
+                                        <div class="text-center">
+                                            <a href="contact.html" class="btn btn-outline-warning">
+                                                <i class="fas fa-plus me-1"></i>Đề xuất sàn
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="testimonials-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Khách Hàng <span class="text-warning">Nói Gì</span></h2>
+            <p class="section-subtitle">Những chia sẻ chân thật từ khách hàng đang sử dụng PaybackDay</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://cashback.exchange/image/exchanges/binance.png" alt="Nguyễn Văn A" class="testimonial-avatar">
+                        <div>
+                            <h6 class="testimonial-name">Nguyễn Văn A</h6>
+                            <p class="testimonial-role">Nhà đầu tư cá nhân</p>
+                        </div>
+                    </div>
+                    <p class="testimonial-content">"Tôi đã sử dụng PaybackDay được 6 tháng và đã được hoàn lại được hơn 2 triệu đồng từ phí giao dịch. Dịch vụ rất uy tín và minh bạch."</p>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://cashback.exchange/image/exchanges/binance.png" alt="Trần Thị B" class="testimonial-avatar">
+                        <div>
+                            <h6 class="testimonial-name">Trần Thị B</h6>
+                            <p class="testimonial-role">Trader chuyên nghiệp</p>
+                        </div>
+                    </div>
+                    <p class="testimonial-content">"Với khối lượng giao dịch lớn của tôi, PaybackDay giúp tôi tiết kiệm được một khoản đáng kể mỗi tháng. Rất hài lòng với dịch vụ này."</p>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://cashback.exchange/image/exchanges/binance.png" alt="Lê Văn C" class="testimonial-avatar">
+                        <div>
+                            <h6 class="testimonial-name">Lê Văn C</h6>
+                            <p class="testimonial-role">Nhà đầu tư F0</p>
+                        </div>
+                    </div>
+                    <p class="testimonial-content">"Mới bắt đầu đầu tư nhưng đã biết đến PaybackDay. Mỗi tháng được hoàn lại vài trăm nghìn hoàn tiền, tuy ít nhưng cũng vui lắm."</p>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5" style="background: #0a0e1a;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="row">
+                    <div class="col-12 text-center mb-2">
+                        <h2 class="section-title fade-in">Sẵn sàng bắt đầu nhận <span class="text-warning">hoàn tiền?</span></h2>
+                        <p class="section-subtitle fade-in">Tham gia cùng hàng nghìn nhà đầu tư thông minh đã tin tưởng PaybackDay</p>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a asp-controller="Register" asp-action="Index" class="btn btn-warning btn-lg">
+                        <i class="fas fa-rocket me-2"></i>Đăng ký miễn phí
+                    </a>
+                    <a asp-controller="Contact" asp-action="Index" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-phone me-2"></i>Liên hệ tư vấn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="script.js"></script>
+<script src="user-chat-bubble.js"></script>
+
+<script>
+    // Counter animation
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / 200;
+            let current = 0;
+
+            const updateCounter = () => {
+                if (current < target) {
+                    current += increment;
+                    if (target >= 1000000000) {
+                        counter.textContent = (current / 1000000000).toFixed(1) + 'B';
+                    } else if (target >= 1000000) {
+                        counter.textContent = (current / 1000000).toFixed(1) + 'M';
+                    } else if (target >= 1000) {
+                        counter.textContent = (current / 1000).toFixed(1) + 'K';
+                    } else {
+                        counter.textContent = Math.ceil(current);
+                    }
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    if (target >= 1000000000) {
+                        counter.textContent = (target / 1000000000).toFixed(1) + 'B';
+                    } else if (target >= 1000000) {
+                        counter.textContent = (target / 1000000).toFixed(1) + 'M';
+                    } else if (target >= 1000) {
+                        counter.textContent = (target / 1000).toFixed(1) + 'K';
+                    } else {
+                        counter.textContent = target;
+                    }
+                }
+            };
+
+            updateCounter();
+        });
+    }
+
+    // Intersection Observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+
+                // Animate counters when stats section is visible
+                if (entry.target.classList.contains('stat-item')) {
+                    animateCounters();
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observe all animated elements
+    document.addEventListener('DOMContentLoaded', () => {
+        const animatedElements = document.querySelectorAll('.fade-in, .fade-in-stagger, .animate-on-scroll');
+        animatedElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease-out';
+            observer.observe(el);
+        });
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+</script>

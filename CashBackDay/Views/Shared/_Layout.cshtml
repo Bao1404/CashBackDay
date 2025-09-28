@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PaybackDay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+</head>
+@{
+            var user = Context.Session.GetString("UserName");
+                var avartar = Context.Session.GetString("AvatarUrl") ?? "/placeholder.svg?height=32&width=32&text=User";
+}
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" asp-action="Index" asp-controller="Home">
+                <span class="brand-text">PaybackDay</span>
+                <span class="brand-badge">Hoàn Tiền Cao</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewData["ActiveMenu"] == "HomePage" ? "active" : "")" asp-action="Index" asp-controller="Home">
+                            <i class="fas fa-home me-1"></i>Trang chủ
+                        </a>
+                    </li>
+                    @if (user != null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewData["ActiveMenu"] == "RefundPage" ? "active" : "")" asp-action="Index" asp-controller="RefundHistory">
+                                <i class="fas fa-history me-1"></i>Lịch sử
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewData["ActiveMenu"] == "WalletPage" ? "active" : "")" asp-action="Index" asp-controller="Wallet">
+                                <i class="fas fa-wallet me-1"></i>Ví của tôi
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewData["ActiveMenu"] == "TradingFloorPage" ? "active" : "")" asp-action="Index" asp-controller="TradingFloor">
+                                <i class="fas fa-chart-line me-1"></i>Sàn giao dịch
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewData["ActiveMenu"] == "TurtorialPage" ? "active" : "")" asp-action="Index" asp-controller="Turtorials">
+                                <i class="fas fa-play-circle me-1"></i>Hướng dẫn
+                            </a>
+                        </li>
+                    }
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewData["ActiveMenu"] == "ContactPage" ? "active" : "")" asp-action="Index" asp-controller="Contact">
+                            <i class="fas fa-envelope me-1"></i>Liên hệ
+                        </a>
+                    </li>
+                </ul>
+                @if (user == null)
+                {
+                    <div class="navbar-nav">
+                        <a asp-action="Index" asp-controller="Login" class="btn btn-warning btn-sm">Đăng Nhập</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="navbar-nav nav-item dropdown" style="border: none;">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center " href="#" role="button" data-bs-toggle="dropdown"> 
+                            <img src="@avartar" alt="Admin" class="admin-avatar me-2">
+                            <span class="nav-item">@user</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end custom-dropdown">
+                            <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index"><i class="fas fa-user me-2"></i>Hồ sơ</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="/Logout" method="POST">
+                                    <button class="dropdown-item" type="submit"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
+
+
+    <!-- Footer -->
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">
+                        <h4 class="brand-text">PaybackDay</h4>
+                        <span class="brand-badge">Hoàn Tiền Cao</span>
+                    </div>
+                    <p class="footer-description">
+                        Nền tảng hoàn tiền giao dịch crypto. Giúp nhà đầu tư tối ưu hóa chi phí giao dịch.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Sản phẩm</h6>
+                    <ul class="footer-links">
+                        <li><a href="trading-floors.html">Sàn giao dịch</a></li>
+                        <li><a href="wallets.html">Ví điện tử</a></li>
+                        <li><a href="transaction-history.html">Lịch sử</a></li>
+                        <li><a href="tutorials.html">Hướng dẫn</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Hỗ trợ</h6>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Liên hệ</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Trung tâm trợ giúp</a></li>
+                        <li><a href="#">Báo cáo lỗi</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Công ty</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Về chúng tôi</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Tin tức</a></li>
+                        <li><a href="#">Đối tác</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Pháp lý</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Điều khoản</a></li>
+                        <li><a href="#">Bảo mật</a></li>
+                        <li><a href="#">Cookie</a></li>
+                        <li><a href="#">Khiếu nại</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="footer-divider">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="footer-copyright">
+                        © 2025 PaybackDay. Tất cả quyền được bảo lưu.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="footer-note">
+                        Được phát triển với ❤️ tại Việt Nam
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

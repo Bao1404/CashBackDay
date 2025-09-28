@@ -1,0 +1,261 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Liên Hệ";
+}
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header fade-in">
+            <div class="row align-items-center">
+                <div class="col-12 text-center">
+                    <h1 class="page-title">
+                        <i class="fas fa-envelope text-warning me-3"></i>
+                        Liên hệ với chúng tôi
+                    </h1>
+                    <p class="page-subtitle">Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Methods -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-4 col-md-6">
+                <div class="contact-method-card fade-in-stagger">
+                    <div class="contact-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h4>Chat trực tuyến</h4>
+                    <p>Nhận hỗ trợ ngay lập tức qua chat với đội ngũ chuyên viên</p>
+                    <a asp-action="Index" asp-controller="Login" class="btn btn-warning">
+                        <i class="fas fa-comment me-1"></i>Bắt đầu chat
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="contact-method-card fade-in-stagger">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h4>Hotline 24/7</h4>
+                    <p>Gọi điện trực tiếp để được tư vấn và hỗ trợ kỹ thuật</p>
+                    <a href="tel:1900123456" class="btn btn-warning">
+                        <i class="fas fa-phone me-1"></i>1900 123 456
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="contact-method-card fade-in-stagger">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h4>Email hỗ trợ</h4>
+                    <p>Gửi email để được hỗ trợ chi tiết và lưu trữ lịch sử</p>
+                    <a href="mailto:support@paybackday.vn" class="btn btn-warning">
+                        <i class="fas fa-envelope me-1"></i>support@paybackday.vn
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form and Info -->
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <div class="data-card fade-in">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-paper-plane me-2"></i>Gửi tin nhắn
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="contactForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Họ và tên *</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email *</label>
+                                    <input type="email" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Số điện thoại</label>
+                                    <input type="tel" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Chủ đề *</label>
+                                    <select class="form-select" required>
+                                        <option value="">Chọn chủ đề</option>
+                                        <option value="support">Hỗ trợ kỹ thuật</option>
+                                        <option value="account">Vấn đề tài khoản</option>
+                                        <option value="refund">Hoàn tiền</option>
+                                        <option value="exchange">Kết nối sàn</option>
+                                        <option value="partnership">Hợp tác</option>
+                                        <option value="other">Khác</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Tin nhắn *</label>
+                                    <textarea class="form-control" rows="5" required placeholder="Mô tả chi tiết vấn đề của bạn..."></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="agreePolicy" required>
+                                        <label class="form-check-label" for="agreePolicy">
+                                            Tôi đồng ý với <a href="#" class="text-warning">chính sách bảo mật</a> của PaybackDay
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-warning btn-lg">
+                                        <i class="fas fa-paper-plane me-2"></i>Gửi tin nhắn
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Contact Info -->
+                <div class="data-card mb-4 fade-in">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Thông tin liên hệ
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-info-content">
+                                <h6>Địa chỉ</h6>
+                                <p>Tầng 15, Tòa nhà ABC<br>123 Đường XYZ, Quận 1<br>TP. Hồ Chí Minh</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-info-content">
+                                <h6>Giờ làm việc</h6>
+                                <p>Thứ 2 - Thứ 6: 8:00 - 18:00<br>Thứ 7: 8:00 - 12:00<br>Chủ nhật: Nghỉ</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div class="contact-info-content">
+                                <h6>Hỗ trợ 24/7</h6>
+                                <p>Chat trực tuyến và email<br>luôn sẵn sàng hỗ trợ bạn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ -->
+                <div class="data-card fade-in">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-question-circle me-2"></i>Câu hỏi thường gặp
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="faqAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                        Làm sao để kết nối sàn giao dịch?
+                                    </button>
+                                </h2>
+                                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        Bạn có thể kết nối sàn giao dịch bằng cách vào mục "Sàn giao dịch" và làm theo hướng dẫn.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                        Bao lâu thì nhận được hoàn tiền?
+                                    </button>
+                                </h2>
+                                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        Thông thường tiền hoàn sẽ được xử lý trong vòng 24 giờ sau khi giao dịch hoàn tất.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                        PaybackDay có an toàn không?
+                                    </button>
+                                </h2>
+                                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        PaybackDay sử dụng công nghệ mã hóa SSL 256-bit và tuân thủ các tiêu chuẩn bảo mật quốc tế.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="social-section text-center p-5 fade-in">
+            <h3 class="mb-4">Theo dõi chúng tôi trên mạng xã hội</h3>
+            <p class="text-muted mb-4">Cập nhật tin tức mới nhất và nhận thông báo khuyến mãi</p>
+            <div class="social-links-large">
+                <a href="#" class="social-link-large facebook">
+                    <i class="fab fa-facebook-f"></i>
+                    <span>Facebook</span>
+                </a>
+                <a href="#" class="social-link-large youtube">
+                    <i class="fab fa-youtube"></i>
+                    <span>YouTube</span>
+                </a>
+                <a href="#" class="social-link-large telegram">
+                    <i class="fab fa-telegram"></i>
+                    <span>Telegram</span>
+                </a>
+                <a href="#" class="social-link-large zalo">
+                    <i class="fas fa-comment"></i>
+                    <span>Zalo</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                <div class="success-icon mb-3">
+                    <i class="fas fa-check-circle text-success"></i>
+                </div>
+                <h4 class="mb-3">Gửi tin nhắn thành công!</h4>
+                <p class="mb-4">Cảm ơn bạn đã liên hệ với PaybackDay. Chúng tôi sẽ phản hồi trong vòng 24 giờ.</p>
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
+                    <i class="fas fa-check me-1"></i>Đã hiểu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="contact.js"></script>

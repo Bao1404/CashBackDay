@@ -1,0 +1,174 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Video Hướng Dẫn";
+}
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="page-title">
+                        <i class="fas fa-play-circle me-3"></i>
+                        Video Hướng Dẫn
+                    </h1>
+                    <p class="page-subtitle">Học cách sử dụng PaybackDay hiệu quả nhất</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                        <select class="form-select filter-select" id="categoryFilter">
+                            <option value="">Tất cả danh mục</option>
+                            <option value="getting-started">Bắt đầu</option>
+                            <option value="trading">Giao dịch</option>
+                            <option value="withdrawal">Rút tiền</option>
+                            <option value="advanced">Nâng cao</option>
+                        </select>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="form-control" id="searchVideos" placeholder="Tìm kiếm video...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Video -->
+        <div class="featured-video-card mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <span class="featured-badge">Video Nổi Bật</span>
+                    <div class="featured-content">
+                        <h3 class="featured-title">Hướng Dẫn Đăng Ký và Kết Nối Sàn Giao Dịch</h3>
+                        <p class="featured-description">
+                            Tìm hiểu cách đăng ký tài khoản PaybackDay và kết nối với các sàn giao dịch
+                            để bắt đầu nhận hoàn tiền ngay hôm nay.
+                        </p>
+                        <div class="featured-meta">
+                            <span><i class="fas fa-clock me-1"></i>8:30</span>
+                            <span><i class="fas fa-eye me-1"></i>25K lượt xem</span>
+                            <span><i class="fas fa-calendar me-1"></i>2 ngày trước</span>
+                        </div>
+                        <button class="btn btn-warning btn-lg mt-3" onclick="playFeaturedVideo()">
+                            <i class="fas fa-play me-2"></i>Xem Ngay
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="featured-thumbnail">
+                        <img src="/placeholder.svg?height=250&width=400&text=Featured+Video" alt="Featured Video" class="img-fluid">
+                        <div class="play-overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Categories -->
+        <div class="row mb-5">
+            <div class="col-md-3 mb-3">
+                <div class="category-card" data-category="getting-started">
+                    <div class="category-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="category-content">
+                        <h5 class="category-title">Bắt Đầu</h5>
+                        <p class="category-description">Hướng dẫn cơ bản cho người mới</p>
+                        <span class="category-count">8 video</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="category-card" data-category="trading">
+                    <div class="category-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="category-content">
+                        <h5 class="category-title">Giao Dịch</h5>
+                        <p class="category-description">Kỹ thuật và chiến lược giao dịch</p>
+                        <span class="category-count">12 video</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="category-card" data-category="withdrawal">
+                    <div class="category-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="category-content">
+                        <h5 class="category-title">Rút Tiền</h5>
+                        <p class="category-description">Hướng dẫn rút tiền và quản lý ví</p>
+                        <span class="category-count">6 video</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="category-card" data-category="advanced">
+                    <div class="category-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="category-content">
+                        <h5 class="category-title">Nâng Cao</h5>
+                        <p class="category-description">Tính năng và mẹo nâng cao</p>
+                        <span class="category-count">5 video</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video List -->
+        <div class="row" id="videoContainer">
+            <!-- Video cards will be populated by JavaScript -->
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-4">
+            <button class="btn btn-outline-warning btn-lg" id="loadMoreBtn">
+                <i class="fas fa-plus me-2"></i>Tải Thêm Video
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- Video Player Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="videoModalTitle">Video Title</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <div id="videoPlayer" class="video-player-placeholder">
+                        <div class="text-center text-white">
+                            <i class="fas fa-play-circle fa-5x mb-3"></i>
+                            <p>Video Player Placeholder</p>
+                            <small class="text-muted">Trong thực tế, đây sẽ là video thật</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div id="videoDescription">
+                            <!-- Video description will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-warning">Video Liên Quan</h6>
+                        <div id="relatedVideos">
+                            <!-- Related videos will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/tutorials.js"></script>
