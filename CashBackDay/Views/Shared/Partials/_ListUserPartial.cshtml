@@ -1,0 +1,41 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@foreach (var user in ViewBag.Users)
+{
+    <tr>
+        <td>
+            <div class="d-flex align-items-center">
+                <img src="@user.AvatarUrl" alt="User" class="user-avatar me-3">
+                <div>
+                    <div class="user-name">@user.FullName</div>
+                </div>
+            </div>
+        </td>
+        <td class="user-email">@user.Email</td>
+        <td class="user-phone">@user.Phone</td>
+        <td class="registration-date">
+            @user.CreateAt.ToString("dd/MM/yyyy")
+        </td>
+        <td><span class="status-badge status-@(user.Status == true ? "active" : "banned")"><i class="fas fa-circle"></i>@(user.Status == true ? "Hoạt Động" : "Bị Cấm")</span></td>
+        <td>
+            @if (user.Status == true)
+            {
+                <div class="btn-group" role="group">
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#banUserModal-@user.UserId" title="Cấm">
+                        <i class="fas fa-ban"></i>
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="btn-group" role="group">
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#unbanUserModal-@user.UserId" title="Cấm">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                </div>
+            }
+        </td>
+    </tr>
+}

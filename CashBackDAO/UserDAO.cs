@@ -16,7 +16,10 @@ namespace CashBackDAO
         {
             _context = context;
         }
-
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
         public async Task<User> GetUserLogin(string email, string password)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email) && u.PasswordHash.Equals(password));
@@ -42,6 +45,15 @@ namespace CashBackDAO
         {
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
+        }
+        public async Task<List<User>> SearchUser(string input)
+        {
+            List<User> users = new List<User>();
+            users = await _context.Users
+                .Where(u => u.FullName.ToLower().Contains(input.ToLower())
+                         || u.Email.ToLower().Contains(input.ToLower())
+                         || (u.Phone != null && u.Phone.ToLower().Contains(input.ToLower()))).ToListAsync();
+            return users;
         }
     }
 }
