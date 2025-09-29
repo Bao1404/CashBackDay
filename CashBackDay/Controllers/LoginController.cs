@@ -24,23 +24,35 @@ namespace CashBackDay.Controllers
             var email = form["email"].ToString();
             var password = form["password"].ToString();
 
-            var user = await _userService.GetUserLogin(email, password);
-            if(user != null)
+            try
             {
-                HttpContext.Session.SetInt32("UserId", user.UserId);
-                HttpContext.Session.SetString("UserName", user.FullName);
-                HttpContext.Session.SetString("AvatarUrl", user.AvatarUrl);
-                if (user.Role.Equals("Admin"))
+                var user = await _userService.GetUserLogin(email, password);
+                if (user != null)
                 {
-                    return RedirectToAction("Index", "Admin");
+                    HttpContext.Session.SetInt32("UserId", user.UserId);
+                    HttpContext.Session.SetString("UserName", user.FullName);
+                    HttpContext.Session.SetString("AvatarUrl", user.AvatarUrl ?? string.Empty);
+                    if (user.Role.Equals("Admin"))
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Đăng nhập thành công";
+                        TempData["Type"] = "success";
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                TempData["Message"] = "Sai tài khoản hoặc mật khẩu";
+                TempData["Type"] = "error";
+                return RedirectToAction("Index", "Login");
             }
-            ViewBag.ErrorMessage = "Sai tài khoản hoặc mật khẩu";
-            return View("Index");
+            catch (Exception ex)
+            {
+                TempData["Message"] = "Có lỗi xảy ra";
+                TempData["Type"] = "error";
+                return RedirectToAction("Index", "Login");
+            }
         }
         //Start Google Login
         [HttpGet("/ExternalLogin")]
@@ -69,7 +81,8 @@ namespace CashBackDay.Controllers
 
             if (string.IsNullOrEmpty(email))
             {
-                ViewBag.ErrorMessage = "Không thể lấy mail từ Google.";
+                TempData["Message"] = "Không thể lấy mail từ Google.";
+                TempData["Type"] = "danger";
                 return View("Index");
             }
 
@@ -92,9 +105,8 @@ namespace CashBackDay.Controllers
                 existingUser = await _userService.CheckEmailExist(email);
             }
             HttpContext.Session.SetInt32("UserId", existingUser.UserId);
-            HttpContext.Session.SetString("UserName", existingUser.FullName);
-            HttpContext.Session.SetString("AvatarUrl", existingUser.AvatarUrl);
-
+            HttpContext.Session.SetString("UserName", existingUser.FullName ?? string.Empty);
+            HttpContext.Session.SetString("AvatarUrl", existingUser.AvatarUrl ?? string.Empty);
             if (existingUser.Role.Equals("Admin"))
             {
                 return RedirectToAction("Index", "Admin");
