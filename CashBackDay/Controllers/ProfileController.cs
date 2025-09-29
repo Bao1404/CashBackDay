@@ -30,19 +30,37 @@ namespace CashBackDay.Controllers
                 return RedirectToAction("Index", "Login");
             }
             var user = await _userService.GetUserById(userId.Value);
-            if(user == null)
+            if (user == null)
             {
                 return RedirectToAction("Index", "Login");
             }
             user.FullName = form["fullName"];
             user.Phone = form["phone"];
             user.AvatarUrl = form["avatarUrl"];
-            user.Dob = string.IsNullOrEmpty(form["dob"]) ? null : DateOnly.Parse(form["dob"]);
+
+            DateOnly? dob = null;
+            var dobString = form["dob"].ToString();
+            if (!string.IsNullOrEmpty(dobString))
+            {
+                dob = DateOnly.Parse(dobString);
+            }
             user.Gender = form["gender"];
 
-            await _userService.UpdateAccount(user);
-
-            return RedirectToAction("Index", "Profile");
+            if (dob.HasValue && DateTime.Now.Year - dob.Value.Year >= 15)
+            {
+                user.Dob = dob;
+                await _userService.UpdateAccount(user);
+                TempData["Message"] = "Chỉnh sửa thành công";
+                TempData["Type"] = "success";
+                return RedirectToAction("Index", "Profile");
+            }
+            else
+            {
+                await _userService.UpdateAccount(user);
+                TempData["Message"] = "Tuổi phải lớn hơn 15";
+                TempData["Type"] = "error";
+                return RedirectToAction("Index", "Profile");
+            }
         }
     }
 }
