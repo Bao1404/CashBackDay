@@ -12,6 +12,8 @@ namespace CashBackDay.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+            TempData["Message"] = "Đăng xuất thành công";
+            TempData["Type"] = "success";
             return RedirectToAction("Index", "Home");
         }
     }

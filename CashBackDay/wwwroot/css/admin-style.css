@@ -594,6 +594,7 @@
         background: rgba(255, 193, 7, 0.1);
         border-top: 1px solid rgba(255, 193, 7, 0.2);
         padding: 2rem 2.5rem;
+        justify-items: end;
     }
 
 /* Charts */
