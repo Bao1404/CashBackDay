@@ -34,7 +34,7 @@ namespace CashBackDay.Controllers
                     HttpContext.Session.SetString("AvatarUrl", user.AvatarUrl ?? string.Empty);
                     if (user.Role.Equals("Admin"))
                     {
-                        return RedirectToAction("Index", "Admin");
+                        return RedirectToAction("ManageUser", "Admin");
                     }
                     else
                     {
@@ -109,7 +109,7 @@ namespace CashBackDay.Controllers
             HttpContext.Session.SetString("AvatarUrl", existingUser.AvatarUrl ?? string.Empty);
             if (existingUser.Role.Equals("Admin"))
             {
-                return RedirectToAction("Index", "Admin");
+                return RedirectToAction("ManageUser", "Admin");
             }
             else
             {

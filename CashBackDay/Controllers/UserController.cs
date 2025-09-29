@@ -56,14 +56,14 @@ namespace CashBackDay.Controllers
                 await _userService.UpdateAccount(user);
                 TempData["Message"] = "Chỉnh sửa thành công";
                 TempData["Type"] = "success";
-                return RedirectToAction("Index", "Profile");
+                return RedirectToAction("Profile", "User");
             }
             else
             {
                 await _userService.UpdateAccount(user);
                 TempData["Message"] = "Tuổi phải lớn hơn 15";
                 TempData["Type"] = "error";
-                return RedirectToAction("Index", "Profile");
+                return RedirectToAction("Profile", "User");
             }
         }
         [HttpPost("/ChangePassword")]
