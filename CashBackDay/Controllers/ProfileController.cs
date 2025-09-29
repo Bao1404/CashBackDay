@@ -13,7 +13,7 @@ namespace CashBackDay.Controllers
         public async Task<IActionResult> Index()
         {
             var user = HttpContext.Session.GetInt32("UserId");
-            if(user == null)
+            if (user == null)
             {
                 return RedirectToAction("Index", "Login");
             }
@@ -61,6 +61,40 @@ namespace CashBackDay.Controllers
                 TempData["Type"] = "error";
                 return RedirectToAction("Index", "Profile");
             }
+        }
+        [HttpPost("/ChangePassword")]
+        public async Task<IActionResult> ChangePassword(IFormCollection form)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            var user = await _userService.GetUserById(userId.Value);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            var currentPassword = form["currentPassword"];
+            var newPassword = form["newPassword"];
+            var confirmPassword = form["confirmPassword"];
+            if (!user.PasswordHash.Equals(currentPassword))
+            {
+                TempData["Message"] = "Mật khẩu hiện tại không đúng";
+                TempData["Type"] = "error";
+                return RedirectToAction("Index", "Profile");
+            }
+            if (!newPassword.Equals(confirmPassword))
+            {
+                TempData["Message"] = "Mật khẩu mới không khớp";
+                TempData["Type"] = "error";
+                return RedirectToAction("Index", "Profile");
+            }
+            user.PasswordHash = newPassword;
+            await _userService.UpdateAccount(user);
+            TempData["Message"] = "Đổi mật khẩu thành công";
+            TempData["Type"] = "success";
+            return RedirectToAction("Index", "Profile");
         }
     }
 }
