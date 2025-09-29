@@ -45,6 +45,7 @@ namespace CashBackDay.Controllers
                 Phone = vm.PhoneNumber,
                 PasswordHash = vm.Password,
                 CreateAt = DateTime.Now,
+                AvatarUrl = "https://static.vecteezy.com/system/resources/previews/009/292/244/large_2x/default-avatar-icon-of-social-media-user-vector.jpg",
                 Role = "User"
             };
 

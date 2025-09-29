@@ -8,11 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeAuthPage()
 })
 
-// Use global functions from script.js
-const { validateEmail, validatePhone, showToast, showLoading, hideLoading } = window.PaybackDay || {
+// Use global functions from script.js or fallback to simple functions
+const { validateEmail, validatePhone, showLoading, hideLoading } = window.PaybackDay || {
     validateEmail: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
     validatePhone: (phone) => /^(\+84|84|0)[3|5|7|8|9][0-9]{8}$/.test(phone),
-    showToast: (message, type) => alert(`${type}: ${message}`),
     showLoading: (btn) => {
         const originalText = btn.innerHTML
         btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang xử lý...'
@@ -25,26 +24,11 @@ const { validateEmail, validatePhone, showToast, showLoading, hideLoading } = wi
     },
 }
 
+// Use showToast from layout (global scope)
+// Remove the showToast fallback from this file
+
 // Initialize authentication page
 function initializeAuthPage() {
-    // Setup login form if exists
-    const loginForm = document.getElementById("loginForm")
-    if (loginForm) {
-        setupLoginForm()
-    }
-
-    // Setup register form if exists
-    const registerForm = document.getElementById("registerForm")
-    if (registerForm) {
-        setupRegisterForm()
-    }
-
-    // Setup forgot password form if exists
-    const forgotPasswordForm = document.getElementById("forgotPasswordForm")
-    if (forgotPasswordForm) {
-        setupForgotPasswordForm()
-    }
-
     // Setup password strength checker
     const passwordInput = document.getElementById("registerPassword")
     if (passwordInput) {
@@ -66,6 +50,7 @@ function initializeAuthPage() {
     }
 }
 
+
 // Setup login form
 function setupLoginForm() {
     const form = document.getElementById("loginForm")
@@ -84,49 +69,49 @@ function setupForgotPasswordForm() {
     form.addEventListener("submit", handleForgotPassword)
 }
 
-// Handle login
-function handleLogin(e) {
-    e.preventDefault()
+//// Handle login
+//function handleLogin(e) {
+//    e.preventDefault()
 
-    const email = document.getElementById("email").value
-    const password = document.getElementById("password").value
-    const rememberMe = document.getElementById("rememberMe").checked
+//    const email = document.getElementById("email").value
+//    const password = document.getElementById("password").value
+//    const rememberMe = document.getElementById("rememberMe").checked
 
-    // Validate inputs
-    if (!validateEmail(email)) {
-        showToast("Email không hợp lệ!", "danger")
-        return
-    }
+//    // Validate inputs
+//    if (!validateEmail(email)) {
+//        showToast("Email không hợp lệ!", "danger")
+//        return
+//    }
 
-    if (password.length < 6) {
-        showToast("Mật khẩu phải có ít nhất 6 ký tự!", "danger")
-        return
-    }
+//    if (password.length < 6) {
+//        showToast("Mật khẩu phải có ít nhất 6 ký tự!", "danger")
+//        return
+//    }
 
-    // Simulate login process
-    const submitBtn = document.querySelector("#loginForm button[type='submit']")
-    const originalText = showLoading(submitBtn)
+//    // Simulate login process
+//    const submitBtn = document.querySelector("#loginForm button[type='submit']")
+//    const originalText = showLoading(submitBtn)
 
-    setTimeout(() => {
-        hideLoading(submitBtn, originalText)
+//    setTimeout(() => {
+//        hideLoading(submitBtn, originalText)
 
-        // Simulate successful login
-        if (email === "demo@paybackday.vn" && password === "123456") {
-            // Store login state
-            if (rememberMe) {
-                localStorage.setItem("paybackday_user", JSON.stringify({ email, loginTime: Date.now() }))
-            } else {
-                sessionStorage.setItem("paybackday_user", JSON.stringify({ email, loginTime: Date.now() }))
-            }
+//        // Simulate successful login
+//        if (email === "demo@paybackday.vn" && password === "123456") {
+//            // Store login state
+//            if (rememberMe) {
+//                localStorage.setItem("paybackday_user", JSON.stringify({ email, loginTime: Date.now() }))
+//            } else {
+//                sessionStorage.setItem("paybackday_user", JSON.stringify({ email, loginTime: Date.now() }))
+//            }
 
-            // Show success modal
-            const modal = new bootstrap.Modal(document.getElementById("successModal"))
-            modal.show()
-        } else {
-            showToast("Email hoặc mật khẩu không đúng!", "danger")
-        }
-    }, 2000)
-}
+//            // Show success modal
+//            const modal = new bootstrap.Modal(document.getElementById("successModal"))
+//            modal.show()
+//        } else {
+//            showToast("Email hoặc mật khẩu không đúng!", "danger")
+//        }
+//    }, 2000)
+//}
 
 // Handle register
 function handleRegister(e) {
