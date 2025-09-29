@@ -1,0 +1,277 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Quản lý tin nhắn";
+}
+<main class="admin-main">
+    <div class="messages-layout">
+        <!-- Left Panel: Conversations List -->
+        <div class="conversations-panel">
+            <div class="conversations-header">
+                <div class="header-title">
+                    <h4 class="mb-0">
+                        <i class="fas fa-comments me-2"></i>
+                        Tin nhắn khách hàng
+                    </h4>
+                    <span class="conversations-count">12 cuộc trò chuyện</span>
+                </div>
+            </div>
+
+            <div class="conversations-search">
+                <div class="search-input-group">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchMessages" class="search-input" placeholder="Tìm kiếm tin nhắn...">
+                    <button class="search-clear-btn" onclick="clearSearch()" title="Xóa tìm kiếm">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="conversations-filters">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">
+                        Tất cả <span class="filter-count">12</span>
+                    </button>
+                    <button class="filter-btn" data-filter="unread">
+                        Chưa đọc <span class="filter-count">5</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Independent scrollable conversations list -->
+            <div class="conversations-list" id="messagesList">
+                <!-- Conversations will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Right Panel: Chat Area -->
+        <div class="chat-panel">
+            <!-- Chat Placeholder -->
+            <div class="chat-placeholder" id="chatPlaceholder">
+                <div class="placeholder-content">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h5>Chọn một cuộc trò chuyện</h5>
+                    <p>Chọn một khách hàng từ danh sách bên trái để bắt đầu trò chuyện</p>
+                    <div class="placeholder-stats">
+                        <div class="stat-card">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Cuộc trò chuyện</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Chưa đọc</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Online</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Chat Window -->
+            <div class="chat-window" id="chatWindow" style="display: none;">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="chat-user-info">
+                        <img src="/placeholder.svg?height=48&width=48&text=User" alt="User" class="chat-avatar" id="chatUserAvatar">
+                        <div class="chat-user-details">
+                            <h6 class="chat-user-name" id="chatUserName">Nguyễn Văn A</h6>
+                            <div class="chat-user-status">
+                                <span class="status-dot online" id="chatUserStatus"></span>
+                                <span class="status-text" id="chatUserStatusText">Đang hoạt động</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button class="btn btn-sm btn-outline-info" onclick="viewUserProfile()" title="Xem hồ sơ">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning" onclick="addNote()" title="Thêm ghi chú">
+                            <i class="fas fa-sticky-note"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="markAsResolved()" title="Đánh dấu đã giải quyết">
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="blockUser()" title="Chặn người dùng">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Independent scrollable chat messages area -->
+                <div class="chat-messages-container" id="chatMessagesContainer">
+                    <div class="chat-messages" id="chatMessagesArea">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="typing-indicator-container" id="typingIndicator" style="display: none;">
+                    <div class="typing-indicator">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span class="typing-text">Khách hàng đang nhập...</span>
+                    </div>
+                </div>
+
+                <!-- Chat Input Area -->
+                <div class="chat-input-section">
+                    <!-- Message Input -->
+                    <div class="chat-input-container" id="chatInputContainer" style="display: block;">
+                        <form class="chat-input-form" onsubmit="sendMessage(event)">
+                            <div class="chat-input-wrapper">
+                                <input type="text" class="chat-input" id="messageInput" placeholder="Type your message...">
+                                <button type="button" class="attachment-btn" onclick="attachFile()">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                            </div>
+                            <button type="submit" class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+<script src="admin-messages.js"></script>
+
+<script>
+    // Mobile sidebar toggle
+    document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+        document.getElementById('adminSidebar').classList.toggle('show');
+    });
+
+    function clearSearch() {
+        document.getElementById('searchMessages').value = '';
+        if (window.adminMessenger) {
+            window.adminMessenger.filterConversations('');
+        }
+    }
+
+    function exportMessages() {
+        const modal = new bootstrap.Modal(document.getElementById('exportMessagesModal'));
+        modal.show();
+    }
+
+    function confirmExportMessages() {
+        const format = document.getElementById('exportFormat').value;
+        const dateRange = document.getElementById('exportDateRange').value;
+        const includeResolved = document.getElementById('includeResolved').checked;
+
+        if (window.adminMessenger) {
+            window.adminMessenger.showToast(`Đang xuất tin nhắn định dạng ${format.toUpperCase()}...`, 'info');
+
+            setTimeout(() => {
+                window.adminMessenger.showToast('Đã xuất tin nhắn thành công!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('exportMessagesModal')).hide();
+            }, 2000);
+        }
+    }
+
+    function markAsResolved() {
+        if (window.adminMessenger && window.adminMessenger.currentChatId) {
+            const conversation = window.adminMessenger.conversations.get(window.adminMessenger.currentChatId);
+            if (conversation) {
+                conversation.status = 'resolved';
+                window.adminMessenger.renderConversationsList();
+                window.adminMessenger.showToast(`Đã đánh dấu cuộc trò chuyện với ${conversation.userName} là đã giải quyết!`, 'success');
+            }
+        }
+    }
+
+    function addTemplate() {
+        const modal = new bootstrap.Modal(document.getElementById('messageTemplatesModal'));
+        loadMessageTemplates();
+        modal.show();
+    }
+
+    function sendMessage() {
+        if (window.adminMessenger) {
+            window.adminMessenger.sendMessage();
+        }
+    }
+
+    function loadMessageTemplates() {
+        const templates = {
+            greeting: [
+                { title: 'Chào hỏi cơ bản', content: 'Xin chào! Cảm ơn bạn đã liên hệ với PaybackDay. Tôi có thể giúp gì cho bạn?' },
+                { title: 'Chào hỏi buổi sáng', content: 'Chào buổi sáng! Hy vọng bạn có một ngày tốt lành. Tôi có thể hỗ trợ gì cho bạn?' },
+                { title: 'Chào hỏi buổi chiều', content: 'Chào buổi chiều! Tôi có thể giúp bạn giải quyết vấn đề gì hôm nay?' }
+            ],
+            support: [
+                { title: 'Đang kiểm tra', content: 'Tôi đang kiểm tra thông tin cho bạn. Vui lòng chờ trong giây lát.' },
+                { title: 'Cần thêm thông tin', content: 'Để hỗ trợ bạn tốt hơn, bạn có thể cung cấp thêm thông tin chi tiết không?' },
+                { title: 'Chuyển bộ phận', content: 'Tôi sẽ chuyển vấn đề này cho bộ phận chuyên môn để được hỗ trợ tốt nhất.' }
+            ],
+            resolution: [
+                { title: 'Đã giải quyết', content: 'Vấn đề của bạn đã được giải quyết. Cảm ơn bạn đã liên hệ với chúng tôi!' },
+                { title: 'Hướng dẫn hoàn thành', content: 'Bạn đã hoàn thành thành công. Nếu có thắc mắc gì khác, đừng ngần ngại liên hệ!' },
+                { title: 'Xác nhận giải quyết', content: 'Vấn đề đã được xử lý xong. Bạn có hài lòng với kết quả không?' }
+            ],
+            followup: [
+                { title: 'Theo dõi sau 24h', content: 'Chúng tôi sẽ theo dõi và cập nhật cho bạn trong vòng 24 giờ tới.' },
+                { title: 'Kiểm tra định kỳ', content: 'Chúng tôi sẽ kiểm tra định kỳ và thông báo kết quả cho bạn.' },
+                { title: 'Liên hệ lại', content: 'Nếu vấn đề vẫn tiếp tục, vui lòng liên hệ lại với chúng tôi.' }
+            ]
+        };
+
+        const templateList = document.getElementById('templateList');
+        const categories = document.querySelectorAll('.template-categories .list-group-item');
+
+        categories.forEach(category => {
+            category.addEventListener('click', function() {
+                categories.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+
+                const categoryName = this.dataset.category;
+                const categoryTemplates = templates[categoryName] || [];
+
+                templateList.innerHTML = categoryTemplates.map(template => `
+                    <div class="template-item mb-3 p-3 border rounded">
+                        <h6>${template.title}</h6>
+                        <p class="text-muted mb-2">${template.content}</p>
+                        <button class="btn btn-sm btn-outline-warning" onclick="useTemplate('${template.content}')">
+                            <i class="fas fa-plus me-1"></i>Sử dụng
+                        </button>
+                    </div>
+                `).join('');
+            });
+        });
+
+        // Load default category
+        categories[0].click();
+    }
+
+    function useTemplate(content) {
+        document.getElementById('messageInput').value = content;
+        bootstrap.Modal.getInstance(document.getElementById('messageTemplatesModal')).hide();
+        document.getElementById('messageInput').focus();
+    }
+
+    function createNewTemplate() {
+        if (window.adminMessenger) {
+            window.adminMessenger.showToast('Tính năng tạo mẫu tin nhắn mới sẽ được cập nhật sớm!', 'info');
+        }
+    }
+
+    function editUserProfile() {
+        if (window.adminMessenger) {
+            window.adminMessenger.showToast('Tính năng chỉnh sửa hồ sơ sẽ được cập nhật sớm!', 'info');
+        }
+    }
+</script>

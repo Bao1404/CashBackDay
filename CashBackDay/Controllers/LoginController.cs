@@ -30,7 +30,14 @@ namespace CashBackDay.Controllers
                 HttpContext.Session.SetInt32("UserId", user.UserId);
                 HttpContext.Session.SetString("UserName", user.FullName);
                 HttpContext.Session.SetString("AvatarUrl", user.AvatarUrl);
-                return RedirectToAction("Index", "Home");
+                if (user.Role.Equals("Admin"))
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
             ViewBag.ErrorMessage = "Sai tài khoản hoặc mật khẩu";
             return View("Index");
@@ -88,7 +95,14 @@ namespace CashBackDay.Controllers
             HttpContext.Session.SetString("UserName", existingUser.FullName);
             HttpContext.Session.SetString("AvatarUrl", existingUser.AvatarUrl);
 
-            return RedirectToAction("Index", "Home");
+            if (existingUser.Role.Equals("Admin"))
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }

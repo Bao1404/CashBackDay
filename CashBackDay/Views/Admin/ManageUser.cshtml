@@ -1,0 +1,320 @@
+﻿@using CashBackObject.Models
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Quản lý người dùng";
+    List<User> users = ViewBag.Users;
+}
+<main class="admin-main">
+    <!-- Users Section -->
+    <h2 class="section-title">
+        <i class="fas fa-users me-3"></i>
+        Quản lý người dùng
+    </h2>
+    <div class="section-header">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="revenue-card primary">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-number" >@users.Count()</h3>
+                    <p class="card-label">Tổng người dùng</p>
+                </div>
+            </div>
+        </div>
+        <div class="section-actions">
+            <form id="userSearchForm">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-control" name="input" placeholder="Tìm kiếm người dùng...">
+                </div>
+            </form>
+            <form id="userStatusForm" style="display:flex;">
+                <select class="form-select filter-select" name="status">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="unbanned">Hoạt động</option>
+                    <option value="banned">Bị cấm</option>
+                </select>
+
+                <button class="btn btn-warning">
+                    <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="admin-card">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-list me-2"></i>
+                Danh sách người dùng
+            </h5>
+            <div class="card-actions">
+                <div class="btn-group" role="group">
+                    <a asp-controller="Admin" asp-action="ManageUser" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-sync me-1"></i>Làm mới
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                @if (users != null)
+                {
+                <table class="table table-hover" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Người dùng</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Ngày đăng ký</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                        <tbody id="usersTableBody">
+                            <partial name="Partials/_ListUserPartial" />
+                        </tbody>
+                    </table>
+                }       
+                else
+                {
+                    <h1>Không có người dùng nào</h1>
+                }
+            </div>
+        </div>
+    </div>
+    @if (users != null && users.Count() > 5)
+    {
+        <div class="card-footer">
+            <div class="align-items-center">
+                <nav aria-label="Users pagination">
+                    <ul class="pagination justify-content-end mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Trước</a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Sau</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    }
+</main>
+
+<!-- Ban User Confirmation Modal -->
+@foreach (var user in users)
+{
+    <div class="modal fade" id="banUserModal-@user.UserId" tabindex="-1">
+        <form method="POST" action="/ban">
+            <input type="hidden" name="userId" value="@user.UserId" />
+            <div class="modal-dialog">
+                <div class="modal-content custom-modal">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Xác nhận cấm tài khoản</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Bạn có chắc chắn muốn cấm tài khoản này? Hành động này có thể được hoàn tác.
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tên tài khoản</label>
+                            <input class="form-control" value="@user.FullName" readonly />
+                        </div>
+                        @* <div class="mb-3">
+                    <label class="form-label">Thời gian cấm</label>
+                    <select class="form-select" id="banDuration">
+                        <option value="permanent">Vĩnh viễn</option>
+                        <option value="30">30 ngày</option>
+                        <option value="7">7 ngày</option>
+                        <option value="1">1 ngày</option>
+                    </select>
+                </div> *@
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger">Xác nhận cấm</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+}
+
+<!-- UnBan User Confirmation Modal -->
+@foreach (var user in users)
+{
+    <div class="modal fade" id="unbanUserModal-@user.UserId" tabindex="-1">
+        <form method="POST" action="/unban">
+            <input type="hidden" name="userId" value="@user.UserId" />
+            <div class="modal-dialog">
+                <div class="modal-content custom-modal">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Xác nhận bỏ cấm tài khoản</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Bạn có chắc chắn muốn bỏ cấm tài khoản này?
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tên tài khoản</label>
+                            <input class="form-control" value="@user.FullName" readonly />
+                        </div>
+                        @* <div class="mb-3">
+                    <label class="form-label">Thời gian cấm</label>
+                    <select class="form-select" id="banDuration">
+                        <option value="permanent">Vĩnh viễn</option>
+                        <option value="30">30 ngày</option>
+                        <option value="7">7 ngày</option>
+                        <option value="1">1 ngày</option>
+                    </select>
+                </div> *@
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger">Xác nhận bỏ cấm</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+}
+
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="script.js"></script>
+<script src="admin-users.js"></script>
+
+<script>
+
+    // Mobile sidebar toggle
+    document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+        document.getElementById('adminSidebar').classList.toggle('show');
+    });
+
+    // Number animation
+    function animateNumbers() {
+        const cards = document.querySelectorAll('.card-number[data-target]');
+        cards.forEach(card => {
+            const target = parseInt(card.getAttribute('data-target'));
+            const increment = target / 100;
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                card.textContent = Math.floor(current).toLocaleString('vi-VN');
+            }, 20);
+        });
+    }
+
+    // Initialize animations
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(animateNumbers, 500);
+    });
+
+    // Refresh users function
+    function refreshUsers() {
+        const btn = event.target.closest('button');
+        const icon = btn.querySelector('i');
+
+        icon.classList.add('fa-spin');
+        btn.disabled = true;
+
+        setTimeout(() => {
+            icon.classList.remove('fa-spin');
+            btn.disabled = false;
+        }, 2000);
+    }
+
+    // Show Edit User Modal
+    function showEditUserModal() {
+        // Implementation for showing edit user modal
+        console.log('Show Edit User Modal clicked');
+    }
+
+    // Confirm Edit User
+    function confirmEditUser() {
+        // Implementation for confirming edit user
+        console.log('Confirm Edit User clicked');
+    }
+
+    // Show Ban User Modal
+    function showBanUserModal() {
+        // Implementation for showing ban user modal
+        console.log('Show Ban User Modal clicked');
+    }
+
+    // Confirm Ban User
+    function confirmBanUser() {
+        // Implementation for confirming ban user
+        console.log('Confirm Ban User clicked');
+    }
+
+    // Activate User
+    function activateUser() {
+        // Implementation for activating user
+        console.log('Activate User clicked');
+    }
+
+    // Confirm Add User
+    function confirmAddUser() {
+        // Implementation for confirming add user
+        console.log('Confirm Add User clicked');
+    }
+
+        $(document).ready(function () {
+        $('#userSearchForm').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/Search/User',
+                type: 'GET',
+                data: $(this).serialize(),
+                success: function (data) {
+                    $('#usersTableBody').html(data);
+                },
+                error: function () {
+                    alert('Error loading user data.');
+                }
+            });
+        });
+
+        $('#userStatusForm').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/List/Status',
+                type: 'GET',
+                data: $(this).serialize(),
+                success: function (data) {
+                    $('#usersTableBody').html(data);
+                },
+                error: function () {
+                    alert('Error loading user data.');
+                }
+            });
+        });
+    });
+</script>

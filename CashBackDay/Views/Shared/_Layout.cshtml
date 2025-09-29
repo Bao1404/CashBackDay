@@ -178,6 +178,105 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Container để chứa toast -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer" style="z-index: 1080;"></div>
+
+    <style>
+        /* Toast custom */
+        .toast.custom-toast {
+            display: block; /* ✅ Không để Bootstrap ẩn */
+            min-width: 250px;
+            opacity: 0;
+            transform: translateX(120%);
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+            /* Khi trượt vào */
+            .toast.custom-toast.toast-in {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            /* Khi trượt ra */
+            .toast.custom-toast.toast-out {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+    </style>
+
+    <script>
+        function showToast(message, type = "success", delay = 3000) {
+            const toastId = "toast-" + Date.now();
+
+            // Chọn màu + icon
+            let bgClass, icon;
+            switch (type) {
+                case "success":
+                    bgClass = "bg-success text-white";
+                    icon = "✔️";
+                    break;
+                case "error":
+                    bgClass = "bg-danger text-white";
+                    icon = "❌";
+                    break;
+                case "warning":
+                    bgClass = "bg-warning text-dark";
+                    icon = "⚠️";
+                    break;
+                case "info":
+                    bgClass = "bg-info text-dark";
+                    icon = "ℹ️";
+                    break;
+                default:
+                    bgClass = "bg-secondary text-white";
+                    icon = "🔔";
+            }
+
+            const toastHtml = `
+                <div id="${toastId}" class="toast custom-toast align-items-center ${bgClass} border-0 mb-2"
+                     role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <span class="me-2">${icon}</span> ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto"></button>
+                    </div>
+                </div>
+            `;
+
+            const container = document.getElementById("toastContainer");
+            container.insertAdjacentHTML("afterbegin", toastHtml);
+
+            const toastEl = document.getElementById(toastId);
+
+            // Trigger slide-in
+            setTimeout(() => toastEl.classList.add("toast-in"), 20);
+
+            // Auto hide
+            setTimeout(() => hideToast(toastEl), delay);
+
+            // Close button click
+            toastEl.querySelector(".btn-close").addEventListener("click", () => hideToast(toastEl));
+        }
+
+        function hideToast(toastEl) {
+            toastEl.classList.remove("toast-in");
+            toastEl.classList.add("toast-out");
+            setTimeout(() => toastEl.remove(), 400); // chờ animation xong rồi remove
+        }
+
+        // Gọi khi load trang nếu có TempData
+        document.addEventListener("DOMContentLoaded", function () {
+            @if (TempData["Message"] != null)
+            {
+                    <text>
+                        showToast("@TempData["Message"]", "@(TempData["Type"] ?? "info")");
+                    </text>
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
