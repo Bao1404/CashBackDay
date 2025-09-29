@@ -33,28 +33,28 @@
                     @if (user != null)
                     {
                         <li class="nav-item">
-                            <a class="nav-link @(ViewData["ActiveMenu"] == "RefundPage" ? "active" : "")" asp-action="Index" asp-controller="RefundHistory">
+                            <a class="nav-link @(ViewData["ActiveMenu"] == "RefundPage" ? "active" : "")" asp-action="RefundHistory" asp-controller="User">
                                 <i class="fas fa-history me-1"></i>Lịch sử
                             </a>
                         </li>
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link @(ViewData["ActiveMenu"] == "WalletPage" ? "active" : "")" asp-action="Index" asp-controller="Wallet">
                                 <i class="fas fa-wallet me-1"></i>Ví của tôi
                             </a>
-                        </li>
+                        </li> *@
                         <li class="nav-item">
-                            <a class="nav-link @(ViewData["ActiveMenu"] == "TradingFloorPage" ? "active" : "")" asp-action="Index" asp-controller="TradingFloor">
+                            <a class="nav-link @(ViewData["ActiveMenu"] == "FloorPage" ? "active" : "")" asp-action="TradingFloor" asp-controller="User">
                                 <i class="fas fa-chart-line me-1"></i>Sàn giao dịch
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewData["ActiveMenu"] == "TurtorialPage" ? "active" : "")" asp-action="Index" asp-controller="Turtorials">
+                            <a class="nav-link @(ViewData["ActiveMenu"] == "TurtorialPage" ? "active" : "")" asp-action="Turtorial" asp-controller="User">
                                 <i class="fas fa-play-circle me-1"></i>Hướng dẫn
                             </a>
                         </li>
                     }
                     <li class="nav-item">
-                        <a class="nav-link @(ViewData["ActiveMenu"] == "ContactPage" ? "active" : "")" asp-action="Index" asp-controller="Contact">
+                        <a class="nav-link @(ViewData["ActiveMenu"] == "ContactPage" ? "active" : "")" asp-action="Contact" asp-controller="User">
                             <i class="fas fa-envelope me-1"></i>Liên hệ
                         </a>
                     </li>
