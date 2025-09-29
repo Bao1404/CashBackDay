@@ -1,0 +1,1044 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<main class="admin-main">
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="admin-section active">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-tachometer-alt me-3"></i>
+                Dashboard
+            </h2>
+            <div class="section-actions">
+                <select class="form-select filter-select" id="dashboardPeriod">
+                    <option value="today">Hôm nay</option>
+                    <option value="week">7 ngày qua</option>
+                    <option value="month" selected>30 ngày qua</option>
+                    <option value="year">Năm nay</option>
+                </select>
+                <button class="btn btn-warning" onclick="exportDashboard()">
+                    <i class="fas fa-download me-2"></i>Xuất báo cáo
+                </button>
+                <button class="btn btn-outline-info" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt me-2"></i>Làm mới
+                </button>
+            </div>
+        </div>
+
+        <!-- Revenue Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card primary">
+                    <div class="card-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number" data-target="2400000000">2.4 Tỷ VNĐ</h3>
+                        <p class="card-label">Tổng doanh thu</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+12.5%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card success">
+                    <div class="card-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number" data-target="480000000">480M VNĐ</h3>
+                        <p class="card-label">Hoa hồng nhận</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+8.3%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card warning">
+                    <div class="card-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number" data-target="360000000">360M VNĐ</h3>
+                        <p class="card-label">Đã hoàn tiền</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+15.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card info">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number" data-target="120000000">120M VNĐ</h3>
+                        <p class="card-label">Lợi nhuận</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+25.0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <div class="col-lg-8 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-area me-2"></i>
+                            Biểu đồ doanh thu
+                        </h5>
+                        <div class="card-actions">
+                            <div class="btn-group" role="group">
+                                <input type="radio" class="btn-check" name="chartType" id="revenue" checked>
+                                <label class="btn btn-outline-warning btn-sm" for="revenue">Doanh thu</label>
+                                <input type="radio" class="btn-check" name="chartType" id="commission">
+                                <label class="btn btn-outline-warning btn-sm" for="commission">Hoa hồng</label>
+                                <input type="radio" class="btn-check" name="chartType" id="refund">
+                                <label class="btn btn-outline-warning btn-sm" for="refund">Hoàn tiền</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="revenueChart" width="400" height="200"></canvas>
+                            <div class="chart-loading d-none">
+                                <div class="spinner-border text-warning" role="status">
+                                    <span class="visually-hidden">Đang tải...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-pie me-2"></i>
+                            Phân bố sàn giao dịch
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="floorChart" width="300" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-users me-2"></i>
+                            Thống kê người dùng
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-icon bg-primary">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>1,234</h4>
+                                    <p>Người dùng mới</p>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon bg-success">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>24,568</h4>
+                                    <p>Tổng người dùng</p>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon bg-warning">
+                                    <i class="fas fa-user-clock"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>8,945</h4>
+                                    <p>Hoạt động</p>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon bg-danger">
+                                    <i class="fas fa-user-slash"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>23</h4>
+                                    <p>Bị cấm</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-building me-2"></i>
+                            Top sàn giao dịch
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="top-floors">
+                            <div class="floor-item">
+                                <div class="floor-info">
+                                    <img src="/placeholder.svg?height=32&width=32&text=VPS" alt="VPS" class="floor-logo">
+                                    <div>
+                                        <h6>VPS Securities</h6>
+                                        <small>45% thị phần</small>
+                                    </div>
+                                </div>
+                                <div class="floor-revenue">
+                                    <strong>1.08 Tỷ VNĐ</strong>
+                                </div>
+                            </div>
+                            <div class="floor-item">
+                                <div class="floor-info">
+                                    <img src="/placeholder.svg?height=32&width=32&text=SSI" alt="SSI" class="floor-logo">
+                                    <div>
+                                        <h6>SSI Securities</h6>
+                                        <small>32% thị phần</small>
+                                    </div>
+                                </div>
+                                <div class="floor-revenue">
+                                    <strong>768M VNĐ</strong>
+                                </div>
+                            </div>
+                            <div class="floor-item">
+                                <div class="floor-info">
+                                    <img src="/placeholder.svg?height=32&width=32&text=HSC" alt="HSC" class="floor-logo">
+                                    <div>
+                                        <h6>HSC Securities</h6>
+                                        <small>15% thị phần</small>
+                                    </div>
+                                </div>
+                                <div class="floor-revenue">
+                                    <strong>360M VNĐ</strong>
+                                </div>
+                            </div>
+                            <div class="floor-item">
+                                <div class="floor-info">
+                                    <img src="/placeholder.svg?height=32&width=32&text=BIN" alt="Binance" class="floor-logo">
+                                    <div>
+                                        <h6>Binance</h6>
+                                        <small>8% thị phần</small>
+                                    </div>
+                                </div>
+                                <div class="floor-revenue">
+                                    <strong>192M VNĐ</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Section -->
+    <div id="users" class="admin-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-users me-3"></i>
+                Quản lý người dùng
+            </h2>
+            <div class="section-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-control" id="userSearch" placeholder="Tìm kiếm người dùng...">
+                </div>
+                <select class="form-select filter-select" id="userStatusFilter">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
+                    <option value="banned">Bị cấm</option>
+                </select>
+                <button class="btn btn-warning" onclick="exportUsers()">
+                    <i class="fas fa-download me-2"></i>Xuất danh sách
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-list me-2"></i>
+                    Danh sách người dùng
+                </h5>
+                <div class="card-actions">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-outline-success btn-sm" onclick="bulkAction('activate')">
+                            <i class="fas fa-check me-1"></i>Kích hoạt
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="bulkAction('ban')">
+                            <i class="fas fa-ban me-1"></i>Cấm
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table admin-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" class="form-check-input" id="selectAll" onchange="toggleSelectAll()">
+                                </th>
+                                <th>Người dùng</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Ngày đăng ký</th>
+                                <th>Tổng hoàn tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <nav aria-label="Users pagination">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Trước</a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Sau</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Commissions Section -->
+    <div id="commissions" class="admin-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-handshake me-3"></i>
+                Lịch sử hoa hồng sàn
+            </h2>
+            <div class="section-actions">
+                <select class="form-select filter-select" id="commissionFloorFilter">
+                    <option value="">Tất cả sàn</option>
+                    <option value="vps">VPS Securities</option>
+                    <option value="ssi">SSI Securities</option>
+                    <option value="hsc">HSC Securities</option>
+                    <option value="binance">Binance</option>
+                    <option value="tcbs">TCBS Securities</option>
+                </select>
+                <select class="form-select filter-select" id="commissionPeriodFilter">
+                    <option value="today">Hôm nay</option>
+                    <option value="week">7 ngày qua</option>
+                    <option value="month" selected>30 ngày qua</option>
+                    <option value="quarter">3 tháng qua</option>
+                    <option value="year">Năm nay</option>
+                </select>
+                <button class="btn btn-warning" onclick="exportCommissions()">
+                    <i class="fas fa-download me-2"></i>Xuất báo cáo
+                </button>
+            </div>
+        </div>
+
+        <!-- Commission Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card success">
+                    <div class="card-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number">58.2M VNĐ</h3>
+                        <p class="card-label">Hoa hồng tháng này</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+18.5%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card info">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number">1,456</h3>
+                        <p class="card-label">Giao dịch hoa hồng</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+12.3%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card warning">
+                    <div class="card-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number">72.5%</h3>
+                        <p class="card-label">Tỷ lệ hoa hồng TB</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+2.1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card primary">
+                    <div class="card-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number">5</h3>
+                        <p class="card-label">Sàn đối tác</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-plus"></i>
+                            <span>+1 sàn</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Chi tiết hoa hồng theo sàn
+                </h5>
+                <div class="card-actions">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-outline-success btn-sm" onclick="approveAllCommissions()">
+                            <i class="fas fa-check-double me-1"></i>Duyệt tất cả
+                        </button>
+                        <button class="btn btn-outline-info btn-sm" onclick="refreshCommissions()">
+                            <i class="fas fa-sync me-1"></i>Làm mới
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table admin-table" id="commissionsTable">
+                        <thead>
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Sàn giao dịch</th>
+                                <th>Số giao dịch</th>
+                                <th>Tổng phí gốc</th>
+                                <th>Hoa hồng nhận</th>
+                                <th>Tỷ lệ (%)</th>
+                                <th>Ngày thanh toán</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commissionsTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            Hiển thị <span class="fw-bold">1-10</span> trong tổng số <span class="fw-bold">156</span> bản ghi
+                        </small>
+                    </div>
+                    <div class="col-md-6">
+                        <nav aria-label="Commission pagination">
+                            <ul class="pagination justify-content-end mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Trước</a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">1</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Sau</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commission Analytics -->
+        <div class="row mt-4">
+            <div class="col-lg-8 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-area me-2"></i>
+                            Xu hướng hoa hồng theo thời gian
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="commissionTrendChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-trophy me-2"></i>
+                            Top sàn theo hoa hồng
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="top-floors">
+                            <div class="floor-item">
+                                <div class="floor-info">
+                                    <img src="/placeholder.svg?height=32&width=32&text=VPS" alt="VPS" class="floor-logo">
+                                    <div>
+                                        <h6>VPS Securities</h6>
+                                        <small>80% hoa hồng</small>
+                                    </div>
+                                </div>
+                                <div class="floor-revenue">
+                                    <strong>23.4M VNĐ</strong>
+                                </div>
+                            </div>
+                            <div class="floor-item">
+                                <div class="floor-info">
+                                    <img src="/placeholder.svg?height=32&width=32&text=SSI" alt="SSI" class="floor-logo">
+                                    <div>
+                                        <h6>SSI Securities</h6>
+                                        <small>75% hoa hồng</small>
+                                    </div>
+                                </div>
+                                <div class="floor-revenue">
+                                    <strong>18.7M VNĐ</strong>
+                                </div>
+                            </div>
+                            <div class="floor-item">
+                                <div class="floor-info">
+                                    <img src="/placeholder.svg?height=32&width=32&text=BIN" alt="Binance" class="floor-logo">
+                                    <div>
+                                        <h6>Binance</h6>
+                                        <small>65% hoa hồng</small>
+                                    </div>
+                                </div>
+                                <div class="floor-revenue">
+                                    <strong>16.1M VNĐ</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refunds Section -->
+    <div id="refunds" class="admin-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-money-bill-wave me-3"></i>
+                Quản lý hoàn tiền
+            </h2>
+            <div class="section-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-control" id="refundSearch" placeholder="Tìm mã GD, người dùng...">
+                </div>
+                <select class="form-select filter-select" id="refundStatusFilter">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="completed">Hoàn thành</option>
+                    <option value="pending">Đang xử lý</option>
+                    <option value="failed">Thất bại</option>
+                    <option value="cancelled">Đã hủy</option>
+                </select>
+                <select class="form-select filter-select" id="refundFloorFilter">
+                    <option value="">Tất cả sàn</option>
+                    <option value="vps">VPS Securities</option>
+                    <option value="ssi">SSI Securities</option>
+                    <option value="hsc">HSC Securities</option>
+                    <option value="binance">Binance</option>
+                    <option value="tcbs">TCBS Securities</option>
+                </select>
+                <select class="form-select filter-select" id="refundPeriodFilter">
+                    <option value="today">Hôm nay</option>
+                    <option value="week">7 ngày qua</option>
+                    <option value="month" selected>30 ngày qua</option>
+                    <option value="quarter">3 tháng qua</option>
+                </select>
+                <button class="btn btn-warning" onclick="exportRefunds()">
+                    <i class="fas fa-download me-2"></i>Xuất báo cáo
+                </button>
+            </div>
+        </div>
+
+        <!-- Refund Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card success">
+                    <div class="card-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number">42.8M VNĐ</h3>
+                        <p class="card-label">Đã hoàn tiền</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+15.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card warning">
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number">8.5M VNĐ</h3>
+                        <p class="card-label">Đang xử lý</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+5.8%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card info">
+                    <div class="card-icon">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number">2,847</h3>
+                        <p class="card-label">Tổng giao dịch</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+22.1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="revenue-card primary">
+                    <div class="card-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-number">84.2%</h3>
+                        <p class="card-label">Tỷ lệ thành công</p>
+                        <div class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+3.5%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-list me-2"></i>
+                    Danh sách giao dịch hoàn tiền
+                </h5>
+                <div class="card-actions">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-outline-success btn-sm" onclick="bulkApproveRefunds()">
+                            <i class="fas fa-check-double me-1"></i>Duyệt hàng loạt
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="bulkRejectRefunds()">
+                            <i class="fas fa-times me-1"></i>Từ chối hàng loạt
+                        </button>
+                        <button class="btn btn-outline-info btn-sm" onclick="refreshRefunds()">
+                            <i class="fas fa-sync me-1"></i>Làm mới
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table admin-table" id="refundsTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" class="form-check-input" id="selectAllRefunds" onchange="toggleSelectAllRefunds()">
+                                </th>
+                                <th>Mã GD</th>
+                                <th>Người dùng</th>
+                                <th>Sàn giao dịch</th>
+                                <th>Mã CK/Coin</th>
+                                <th>Số lượng</th>
+                                <th>Ngày GD</th>
+                                <th>Phí gốc</th>
+                                <th>Hoàn tiền</th>
+                                <th>Ngày xử lý</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="refundsTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            Hiển thị <span class="fw-bold">1-15</span> trong tổng số <span class="fw-bold">2,847</span> bản ghi
+                        </small>
+                    </div>
+                    <div class="col-md-6">
+                        <nav aria-label="Refunds pagination">
+                            <ul class="pagination justify-content-end mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Trước</a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">1</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Sau</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Refund Analytics -->
+        <div class="row mt-4">
+            <div class="col-lg-8 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-line me-2"></i>
+                            Xu hướng hoàn tiền theo thời gian
+                        </h5>
+                        <div class="card-actions">
+                            <div class="btn-group" role="group">
+                                <input type="radio" class="btn-check" name="refundChartType" id="refundAmount" checked>
+                                <label class="btn btn-outline-warning btn-sm" for="refundAmount">Số tiền</label>
+                                <input type="radio" class="btn-check" name="refundChartType" id="refundCount">
+                                <label class="btn btn-outline-warning btn-sm" for="refundCount">Số lượng</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="refundTrendChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-pie me-2"></i>
+                            Phân bố theo trạng thái
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="refundStatusChart" width="300" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="row">
+            <div class="col-12">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-history me-2"></i>
+                            Hoạt động gần đây
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-timeline">
+                            <div class="activity-item">
+                                <div class="activity-icon bg-success">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6>Hoàn tiền thành công</h6>
+                                    <p>Đã hoàn tiền 25,000 VNĐ cho giao dịch TXN001 của Nguyễn Văn A</p>
+                                    <small class="text-muted">2 phút trước</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon bg-warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6>Yêu cầu hoàn tiền mới</h6>
+                                    <p>Trần Thị B yêu cầu hoàn tiền 30,000 VNĐ cho giao dịch TXN002</p>
+                                    <small class="text-muted">5 phút trước</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon bg-danger">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6>Hoàn tiền thất bại</h6>
+                                    <p>Không thể hoàn tiền cho giao dịch TXN003 - Lỗi kết nối ngân hàng</p>
+                                    <small class="text-muted">10 phút trước</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div id="settings" class="admin-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-cog me-3"></i>
+                Cài đặt hệ thống
+            </h2>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-percentage me-2"></i>
+                            Cài đặt tỷ lệ hoàn tiền
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="refundRatesForm">
+                            <div class="mb-3">
+                                <label class="form-label">VPS Securities</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="80" min="0" max="100">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">SSI Securities</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="75" min="0" max="100">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">HSC Securities</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="70" min="0" max="100">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Binance</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="65" min="0" max="100">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save me-2"></i>Lưu cài đặt
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-bell me-2"></i>
+                            Cài đặt thông báo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="notificationForm">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                <label class="form-check-label" for="emailNotifications">
+                                    Thông báo qua email
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="smsNotifications">
+                                <label class="form-check-label" for="smsNotifications">
+                                    Thông báo qua SMS
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="pushNotifications" checked>
+                                <label class="form-check-label" for="pushNotifications">
+                                    Thông báo đẩy
+                                </label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ngưỡng cảnh báo giao dịch bất thường</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="10000000" step="1000000">
+                                    <span class="input-group-text">VNĐ</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save me-2"></i>Lưu cài đặt
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Refund Detail Modal -->
+<div class="modal fade" id="refundDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết giao dịch hoàn tiền</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="refundDetailBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-success" id="approveRefundBtn">Duyệt hoàn tiền</button>
+                <button type="button" class="btn btn-danger" id="rejectRefundBtn">Từ chối</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Commission Detail Modal -->
+<div class="modal fade" id="commissionDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết hoa hồng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="commissionDetailBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-warning" id="exportCommissionBtn">Xuất báo cáo</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Detail Modal -->
+<div class="modal fade" id="userDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết người dùng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="userDetailBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-danger" id="banUserBtn">Cấm tài khoản</button>
+                <button type="button" class="btn btn-success" id="activateUserBtn">Kích hoạt</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ban User Confirmation Modal -->
+<div class="modal fade" id="banUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận cấm tài khoản</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Bạn có chắc chắn muốn cấm tài khoản này? Hành động này có thể được hoàn tác.
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Lý do cấm tài khoản</label>
+                    <textarea class="form-control" id="banReason" rows="3" placeholder="Nhập lý do cấm tài khoản..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" onclick="confirmBanUser()">Xác nhận cấm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
