@@ -19,5 +19,5 @@ public partial class Video
 
     public DateTime? UploadDate { get; set; }
 
-    public int? TotalViews { get; set; }
+    public string? VideoUrl { get; set; }
 }
