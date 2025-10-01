@@ -6,9 +6,14 @@ namespace CashBackDay.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly ITradingFloorService _tradingFloorService;
+        private readonly IVideoService _videoService;
+        private int? currentUser => HttpContext.Session.GetInt32("UserId");
+        public UserController(IUserService userService, ITradingFloorService tradingFloorService, IVideoService videoService)
         {
             _userService = userService;
+            _tradingFloorService = tradingFloorService;
+            _videoService = videoService;
         }
         public IActionResult Contact()
         {
@@ -17,23 +22,21 @@ namespace CashBackDay.Controllers
         }
         public async Task<IActionResult> Profile()
         {
-            var user = HttpContext.Session.GetInt32("UserId");
-            if (user == null)
+            if (currentUser == null)
             {
                 return RedirectToAction("Index", "Login");
             }
-            var profile = await _userService.GetUserById(user.Value);
+            var profile = await _userService.GetUserById(currentUser.Value);
             return View(profile);
         }
         [HttpPost("/Edit")]
         public async Task<IActionResult> Edit(IFormCollection form)
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
+            if (currentUser == null)
             {
                 return RedirectToAction("Index", "Login");
             }
-            var user = await _userService.GetUserById(userId.Value);
+            var user = await _userService.GetUserById(currentUser.Value);
             if (user == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -56,25 +59,24 @@ namespace CashBackDay.Controllers
                 await _userService.UpdateAccount(user);
                 TempData["Message"] = "Chỉnh sửa thành công";
                 TempData["Type"] = "success";
-                return RedirectToAction("Index", "Profile");
+                return RedirectToAction("Profile", "User");
             }
             else
             {
                 await _userService.UpdateAccount(user);
                 TempData["Message"] = "Tuổi phải lớn hơn 15";
                 TempData["Type"] = "error";
-                return RedirectToAction("Index", "Profile");
+                return RedirectToAction("Profile", "User");
             }
         }
         [HttpPost("/ChangePassword")]
         public async Task<IActionResult> ChangePassword(IFormCollection form)
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
+            if (currentUser == null)
             {
                 return RedirectToAction("Index", "Login");
             }
-            var user = await _userService.GetUserById(userId.Value);
+            var user = await _userService.GetUserById(currentUser.Value);
             if (user == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -102,16 +104,30 @@ namespace CashBackDay.Controllers
         }
         public IActionResult RefundHistory()
         {
+            if(currentUser == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }   
             ViewData["ActiveMenu"] = "RefundPage";
             return View();
         }
         public IActionResult TradingFloor()
         {
+            if(currentUser == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.Floors =  _tradingFloorService.GetAllTradingFloorsAsync().Result;
             ViewData["ActiveMenu"] = "FloorPage";
             return View();
         }
-        public IActionResult Turtorial()
+        public async Task<IActionResult> Turtorial()
         {
+            if(currentUser == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.Videos = await _videoService.GetAllVideos();
             ViewData["ActiveMenu"] = "TurtorialPage";
             return View();
         }

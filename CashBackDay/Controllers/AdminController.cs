@@ -8,19 +8,23 @@ namespace CashBackDay.Controllers
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
+        private readonly ITradingFloorService _tradingFloorService;
+        private readonly IVideoService _videoService;
         private int? currentUser => HttpContext.Session.GetInt32("UserId");
-        public AdminController(IUserService userService)
+        public AdminController(IUserService userService, ITradingFloorService tradingFloorService, IVideoService videoService)
         {
             _userService = userService;
+            _tradingFloorService = tradingFloorService;
+            _videoService = videoService;
         }
         public async Task<IActionResult> Index()
         {
-            if(currentUser == null)
+            if (currentUser == null)
             {
                 return RedirectToAction("Index", "Login");
             }
             var user = await _userService.GetUserById(currentUser.Value);
-            if(user.Role != "Admin")
+            if (user.Role != "Admin")
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -70,7 +74,7 @@ namespace CashBackDay.Controllers
             }
             var userId = int.Parse(form["userId"]);
             var userToBan = await _userService.GetUserById(userId);
-            if(userToBan != null)
+            if (userToBan != null)
             {
                 userToBan.Status = false;
                 await _userService.UpdateAccount(userToBan);
@@ -102,7 +106,7 @@ namespace CashBackDay.Controllers
         public async Task<IActionResult> SearchUser()
         {
             var input = Request.Query["input"];
-            if(string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input))
             {
                 ViewBag.Users = await _userService.GetAllUsers();
                 return PartialView("Partials/_ListUserPartial");
@@ -114,12 +118,12 @@ namespace CashBackDay.Controllers
         public async Task<IActionResult> ListStatus()
         {
             var status = Request.Query["status"];
-            if(string.IsNullOrEmpty(status) || status == "all")
+            if (string.IsNullOrEmpty(status) || status == "all")
             {
                 ViewBag.Users = await _userService.GetAllUsers();
                 return PartialView("Partials/_ListUserPartial");
             }
-            if(status.Equals("Hoạt động"))
+            if (status.Equals("Hoạt động"))
             {
                 var allUsers = await _userService.GetAllUsers();
                 var filteredUsers = allUsers.Where(u => u.Status == true).ToList();
@@ -133,6 +137,206 @@ namespace CashBackDay.Controllers
                 ViewBag.Users = filteredUsers;
                 return PartialView("Partials/_ListUserPartial");
             }
+        }
+        public async Task<IActionResult> ManageFloor()
+        {
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            List<TradingFloor> floors = await _tradingFloorService.GetAllTradingFloorsAsync();
+            ViewBag.Floors = floors;
+
+            ViewData["ActiveMenu"] = "ManageFloor";
+            return View();
+        }
+        [HttpPut("/Floor/Edit")]
+        public async Task<IActionResult> EditFloor(IFormCollection form)
+        {
+            try
+            {
+                var floorId = int.Parse(form["floorId"]);
+                var floorName = form["floorName"];
+                var refundPercentage = decimal.Parse(form["refundPercentage"]);
+                var floorDescription = form["floorDescription"];
+                var floorUrl = form["floorUrl"];
+                var imgUrl = form["imgUrl"];
+                var inviteCode = form["inviteCode"];
+                
+                var floors = await _tradingFloorService.GetAllTradingFloorsAsync();
+                var floorToEdit = floors.FirstOrDefault(f => f.FloorId == floorId);
+                if (floorToEdit != null)
+                {
+                    floorToEdit.FloorName = floorName;
+                    floorToEdit.RefundPercentage = refundPercentage;
+                    floorToEdit.FloorDescription = floorDescription;
+                    floorToEdit.FloorUrl = floorUrl;
+                    floorToEdit.ImgUrl = imgUrl;
+                    floorToEdit.InviteCode = inviteCode;
+                    await _tradingFloorService.EditFloor(floorToEdit);                   
+                }
+                ViewBag.Floors = await _tradingFloorService.GetAllTradingFloorsAsync();
+                return PartialView("Partials/_ListFloorPartial");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+        [HttpPost("/Floor/Add")]
+        public async Task<IActionResult> AddFloor(IFormCollection form)
+        {
+                var floorName = form["floorName"];
+                var refundPercentage = decimal.Parse(form["refundPercentage"]);
+                var floorDescription = form["floorDescription"];
+                var floorUrl = form["floorUrl"];
+                var imgUrl = form["imgUrl"];
+                var inviteCode = form["inviteCode"];
+                TradingFloor newFloor = new TradingFloor
+                {
+                    FloorName = floorName,
+                    RefundPercentage = refundPercentage,
+                    FloorDescription = floorDescription,
+                    FloorUrl = floorUrl,
+                    ImgUrl = imgUrl,
+                    InviteCode = inviteCode,
+                    AddedDate = DateTime.Now
+                };
+                await _tradingFloorService.AddFloor(newFloor);
+                ViewBag.Floors = await _tradingFloorService.GetAllTradingFloorsAsync();
+                return PartialView("Partials/_ListFloorPartial");
+            }
+        [HttpDelete("/Floor/Delete")]
+        public async Task<IActionResult> DeleteFloor(IFormCollection form)
+        {
+            try
+            {
+                var floorId = int.Parse(form["floorId"]);
+                var floorToDelete = await _tradingFloorService.GetTradingFloorById(floorId);
+                if (floorToDelete != null)
+                {
+                    await _tradingFloorService.DeleteFloor(floorId);
+                }
+                ViewBag.Floors = await _tradingFloorService.GetAllTradingFloorsAsync();
+                return PartialView("Partials/_ListFloorPartial");
+            }
+            catch (Exception ex)
+            {
+                return PartialView("Partials/_ListFloorPartial");
+            }
+        }
+        [HttpGet("/Floor/Search")]
+        public async Task<IActionResult> SearchFloor()
+        {
+            var input = Request.Query["input"];
+            if (string.IsNullOrEmpty(input))
+            {
+                ViewBag.Floors = await _tradingFloorService.GetAllTradingFloorsAsync();
+                return PartialView("Partials/_ListFloorPartial");
+            }
+            ViewBag.Floors = await _tradingFloorService.GetFloorByName(input);
+            return PartialView("Partials/_ListFloorPartial");
+        }
+        public async Task<IActionResult> ManageVideo()
+        {
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            var user = await _userService.GetUserById(currentUser.Value);
+            if (user.Role != "Admin")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            ViewBag.Videos = await _videoService.GetAllVideos();
+            ViewData["ActiveMenu"] = "ManageVideo";
+            return View();
+        }
+        [HttpPut("/Video/Edit")]
+        public async Task<IActionResult> EditVideo(IFormCollection form)
+        {
+            try
+            {
+                var videoId = int.Parse(form["videoId"]);
+                var title = form["title"];
+                var category = form["category"];
+                var description = form["description"];
+                var imgUrl = form["imgUrl"];
+                var videoUrl = form["videoUrl"];
+
+                var videos = await _videoService.GetAllVideos();
+                var videoToEdit = videos.FirstOrDefault(f => f.VideoId == videoId);
+                if (videoToEdit != null)
+                {
+                    videoToEdit.Title = title;
+                    videoToEdit.Category = category;
+                    videoToEdit.Description = description;
+                    videoToEdit.VideoUrl = videoUrl;
+                    videoToEdit.ImgUrl = imgUrl;
+                    await _videoService.UpdateVideo(videoToEdit);
+                }
+                ViewBag.Videos = await _videoService.GetAllVideos();
+                return PartialView("Partials/_ListVideoPartial");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+        [HttpPost("/Video/Add")]
+        public async Task<IActionResult> AddVideo(IFormCollection form)
+        {
+            var title = form["title"];
+            var category = form["category"];
+            var description = form["description"];
+            var imgUrl = form["imgUrl"];
+            var videoUrl = form["videoUrl"];
+
+            Video newVideo = new Video
+            {
+                Title = title,
+                Category = category,
+                Description = description,
+                VideoUrl = videoUrl,
+                ImgUrl = imgUrl,
+                UploadDate = DateTime.Now
+            };
+            await _videoService.AddVideo(newVideo);
+            ViewBag.Videos = await _videoService.GetAllVideos();
+            return PartialView("Partials/_ListVideoPartial");
+        }
+        [HttpDelete("/Video/Delete")]
+        public async Task<IActionResult> DeleteVideo(IFormCollection form)
+        {
+            try
+            {
+                var videoId = int.Parse(form["videoId"]);
+                var videToDelete = await _videoService.GetVideoById(videoId);
+                if (videToDelete != null)
+                {
+                    await _videoService.DeleteVideo(videoId);
+                }
+                ViewBag.Videos = await _videoService.GetAllVideos();
+                return PartialView("Partials/_ListVideoPartial");
+            }
+            catch (Exception ex)
+            {
+                return PartialView("Partials/_ListVideoPartial");
+            }
+        }
+        [HttpGet("/Video/Search")]
+        public async Task<IActionResult> SearchVideo()
+        {
+            var input = Request.Query["input"];
+            if (string.IsNullOrEmpty(input))
+            {
+                ViewBag.Videos = await _videoService.GetAllVideos();
+                return PartialView("Partials/_ListVideoPartial");
+            }
+            ViewBag.Videos = await _videoService.SearchVideos(input);
+            return PartialView("Partials/_ListVideoPartial");
         }
     }
 }

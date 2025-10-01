@@ -17,25 +17,10 @@
                     </h1>
                     <p class="page-subtitle">Học cách sử dụng PaybackDay hiệu quả nhất</p>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <div class="d-flex gap-2 justify-content-md-end">
-                        <select class="form-select filter-select" id="categoryFilter">
-                            <option value="">Tất cả danh mục</option>
-                            <option value="getting-started">Bắt đầu</option>
-                            <option value="trading">Giao dịch</option>
-                            <option value="withdrawal">Rút tiền</option>
-                            <option value="advanced">Nâng cao</option>
-                        </select>
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" class="form-control" id="searchVideos" placeholder="Tìm kiếm video...">
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- Featured Video -->
+        @* <!-- Featured Video -->
         <div class="featured-video-card mb-5">
             <div class="row align-items-center">
                 <div class="col-md-8">
@@ -65,9 +50,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> *@
 
-        <!-- Video Categories -->
+        @* <!-- Video Categories -->
         <div class="row mb-5">
             <div class="col-md-3 mb-3">
                 <div class="category-card" data-category="getting-started">
@@ -117,58 +102,70 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> *@
 
         <!-- Video List -->
-        <div class="row" id="videoContainer">
-            <!-- Video cards will be populated by JavaScript -->
-        </div>
+        <div class="row" id="">
+            @if (ViewBag.Videos != null)
+            {
+                foreach (var video in ViewBag.Videos)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <div class="video-card fade-in-stagger fade-in-up" style="opacity: 1; transform: translateY(0px); transition: 0.8s ease-out;">
+                            <div class="video-thumbnail">
+                                <img src="@video.ImgUrl" alt="@video.Title" class="img-fluid">
 
-        <!-- Load More Button -->
-        <div class="text-center mt-4">
-            <button class="btn btn-outline-warning btn-lg" id="loadMoreBtn">
-                <i class="fas fa-plus me-2"></i>Tải Thêm Video
-            </button>
+                                <button type="button" class="play-button" data-bs-toggle="modal" data-bs-target="#videoModal-@video.VideoId">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                @* <div class="video-duration">8:45</div> *@
+                            </div>
+                            <div class="video-content">
+                                <h5 class="video-title">@video.Title</h5>
+                                <p class="video-description">
+                                    @video.Description
+                                </p>
+                                <div class="video-meta d-flex justify-content-between">
+                                    <span class="upload-date">@video.UploadDate.ToString("dd/MM/yyyy")</span>
+                                </div>
+                                <div class="video-tags mt-2">
+                                    <span class="badge bg-warning text-dark">@video.Category</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal cho video -->
+                    <div class="modal fade" id="videoModal-@video.VideoId" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content bg-dark">
+                                <div class="modal-header border-0">
+                                    <h5 class="modal-title text-white">@video.Title</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                                </div>
+                                <div class="modal-body p-0">
+                                    <iframe width="100%" height="400"
+                                            src="@video.VideoUrl"
+                                            frameborder="0" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
         </div>
     </div>
 </main>
 
-<!-- Video Player Modal -->
-<div class="modal fade" id="videoModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content custom-modal">
-            <div class="modal-header">
-                <h5 class="modal-title" id="videoModalTitle">Video Title</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-0">
-                <div class="ratio ratio-16x9">
-                    <div id="videoPlayer" class="video-player-placeholder">
-                        <div class="text-center text-white">
-                            <i class="fas fa-play-circle fa-5x mb-3"></i>
-                            <p>Video Player Placeholder</p>
-                            <small class="text-muted">Trong thực tế, đây sẽ là video thật</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div id="videoDescription">
-                            <!-- Video description will be populated by JavaScript -->
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="text-warning">Video Liên Quan</h6>
-                        <div id="relatedVideos">
-                            <!-- Related videos will be populated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="~/js/tutorials.js"></script>
+<script>
+        var modals = document.querySelectorAll('.modal');
+    modals.forEach(m => {
+        m.addEventListener('hidden.bs.modal', function () {
+            let video = m.querySelector('video');
+            if(video){
+                video.pause();
+                video.currentTime = 0;
+            }
+        });
+    });
+</script>

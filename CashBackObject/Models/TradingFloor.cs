@@ -23,6 +23,8 @@ public partial class TradingFloor
 
     public string? FloorDescription { get; set; }
 
+    public DateTime? AddedDate { get; set; }
+
     public virtual ICollection<AffiliateCommission> AffiliateCommissions { get; set; } = new List<AffiliateCommission>();
 
     public virtual ICollection<TransactionHistory> TransactionHistories { get; set; } = new List<TransactionHistory>();

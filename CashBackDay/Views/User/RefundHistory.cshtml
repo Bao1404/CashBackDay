@@ -13,121 +13,9 @@
                 <div class="col-md-6">
                     <h1 class="page-title">
                         <i class="fas fa-history text-warning me-3"></i>
-                        Lịch sử giao dịch
+                        Lịch sử hoàn tiền
                     </h1>
-                    <p class="page-subtitle">Theo dõi tất cả giao dịch và tiền hoàn của bạn</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <button class="btn btn-warning me-2" onclick="exportData()">
-                        <i class="fas fa-download me-1"></i>Xuất Excel
-                    </button>
-                    <button class="btn btn-outline-warning" onclick="refreshData()">
-                        <i class="fas fa-sync-alt me-1"></i>Làm mới
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Summary Cards -->
-        <div class="row g-4 mb-4">
-            <div class="col-lg-3 col-md-6">
-                <div class="summary-card fade-in-stagger">
-                    <div class="summary-icon">
-                        <i class="fas fa-chart-line text-success"></i>
-                    </div>
-                    <h3 class="summary-number text-success">2,450,000</h3>
-                    <p class="summary-label">Tổng giao dịch (VNĐ)</p>
-                    <small class="text-success">
-                        <i class="fas fa-arrow-up me-1"></i>+12.5% so với tháng trước
-                    </small>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="summary-card fade-in-stagger">
-                    <div class="summary-icon">
-                        <i class="fas fa-coins text-warning"></i>
-                    </div>
-                    <h3 class="summary-number text-warning">73,500</h3>
-                    <p class="summary-label">Tiền hoàn (VNĐ)</p>
-                    <small class="text-success">
-                        <i class="fas fa-arrow-up me-1"></i>+8.3% so với tháng trước
-                    </small>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="summary-card fade-in-stagger">
-                    <div class="summary-icon">
-                        <i class="fas fa-exchange-alt text-info"></i>
-                    </div>
-                    <h3 class="summary-number text-info">156</h3>
-                    <p class="summary-label">Số giao dịch</p>
-                    <small class="text-success">
-                        <i class="fas fa-arrow-up me-1"></i>+15.2% so với tháng trước
-                    </small>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="summary-card fade-in-stagger">
-                    <div class="summary-icon">
-                        <i class="fas fa-percentage text-primary"></i>
-                    </div>
-                    <h3 class="summary-number text-primary">3.0%</h3>
-                    <p class="summary-label">Tỷ lệ hoàn trung bình</p>
-                    <small class="text-muted">Ổn định</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filters -->
-        <div class="data-card mb-4 fade-in">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-filter me-2"></i>Bộ lọc
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="form-label">Khoảng thời gian</label>
-                        <select class="form-select" id="dateRange">
-                            <option value="7">7 ngày qua</option>
-                            <option value="30" selected>30 ngày qua</option>
-                            <option value="90">3 tháng qua</option>
-                            <option value="365">1 năm qua</option>
-                            <option value="custom">Tùy chọn</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Sàn giao dịch</label>
-                        <select class="form-select" id="exchangeFilter">
-                            <option value="">Tất cả sàn</option>
-                            <option value="VPS">VPS Securities</option>
-                            <option value="SSI">SSI Securities</option>
-                            <option value="HSC">HSC Securities</option>
-                            <option value="TCBS">TCBS Securities</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Trạng thái</label>
-                        <select class="form-select" id="statusFilter">
-                            <option value="">Tất cả trạng thái</option>
-                            <option value="completed">Hoàn thành</option>
-                            <option value="pending">Đang xử lý</option>
-                            <option value="failed">Thất bại</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Tìm kiếm</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Mã giao dịch..." id="searchInput">
-                            <button class="btn btn-outline-warning" type="button">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <p class="page-subtitle">Theo dõi lịch sử hoàn tiền của bạn</p>
                 </div>
             </div>
         </div>
@@ -138,11 +26,14 @@
                 <h5 class="card-title mb-0">
                     <i class="fas fa-list me-2"></i>Danh sách giao dịch
                 </h5>
-                <div class="card-actions">
-                    <button class="btn btn-sm btn-outline-warning" onclick="toggleView()">
-                        <i class="fas fa-th-list me-1"></i>Chế độ xem
-                    </button>
-                </div>
+                    <div class="">
+                        <select class="form-select" id="dateRange">
+                            <option value="7">7 ngày qua</option>
+                            <option value="30" selected>30 ngày qua</option>
+                            <option value="90">3 tháng qua</option>
+                            <option value="365">1 năm qua</option>
+                        </select>
+                    </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -151,38 +42,39 @@
                             <tr>
                                 <th>STT</th>
                                 <th>Thời gian</th>
-                                <th>Sàn giao dịch</th>
+                                <th>Sàn</th>
                                 <th>Mã giao dịch</th>
-                                <th>Giá trị GD</th>
-                                <th>Phí giao dịch</th>
-                                <th>Tiền hoàn</th>
-                                <th>Trạng thái</th>
+                                <th>Hoàn tiền</th>
                             </tr>
                         </thead>
                         <tbody id="">
                             <tbody id="">
+                                @if (ViewBag.History != null)
+                                {
                                 <tr>
                                     <td>1</td>
                                     <td>
-                                        <div class="transaction-date">
-                                            <strong>22-10-2020</strong><br>
-                                            <small class="text-muted">${this.formatTime(transaction.date)}</small>
+                                        <div class="registration-date">
+                                            22-10-2020
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="https://cashback.exchange/image/exchanges/binance.png?height=32&width=32&text=V" alt="${transaction.exchange}" height="30" width="30" class="me-2 rounded">
-                                            <span>Binance</span>
-                                        </div>
                                     </td>
                                     <td>
                                         <code class="transaction-id">GD01</code>
                                     </td>
-                                    <td class="fw-bold">100</td>
                                     <td class="text-danger">20</td>
-                                    <td class="text-success fw-bold">+10</td>
-                                    <td><span class="badge bg-${statusClass}">Success</span></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Không có lịch sử nào
+                                    </td>
                                 </tr>
+                                }
                             </tbody>
                     </table>
                 </div>
@@ -190,7 +82,7 @@
         </div>
 
         <!-- Pagination -->
-        <nav aria-label="Transaction pagination" class="mt-4 fade-in">
+        @* <nav aria-label="Transaction pagination" class="mt-4 fade-in">
             <ul class="pagination justify-content-center">
                 <li class="page-item disabled">
                     <a class="page-link" href="#" tabindex="-1">
@@ -212,7 +104,7 @@
                     </a>
                 </li>
             </ul>
-        </nav>
+        </nav> *@
     </div>
 </main>
 
