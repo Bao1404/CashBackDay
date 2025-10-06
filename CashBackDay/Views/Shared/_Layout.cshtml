@@ -11,7 +11,7 @@
 </head>
 @{
             var user = Context.Session.GetString("UserName");
-                var avartar = Context.Session.GetString("AvatarUrl") ?? "/placeholder.svg?height=32&width=32&text=User";
+            var avartar = Context.Session.GetString("AvatarUrl") ?? "/placeholder.svg?height=32&width=32&text=User";
 }
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -178,7 +178,10 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+    @if(user != null)
+    {
+        <script src="~/js/chat-bubble.js" asp-append-version="true"></script>
+    }
     <!-- Container để chứa toast -->
     <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer" style="z-index: 1080;"></div>
 

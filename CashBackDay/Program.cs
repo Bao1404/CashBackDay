@@ -1,4 +1,5 @@
 using CashBackDAO;
+using CashBackDay.Hubs;
 using CashBackObject.Models;
 using CashBackRepositories.Interfaces;
 using CashBackRepositories.Repositories;
@@ -39,6 +40,8 @@ namespace CashBackDay
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ITradingFloorService, TradingFloorService>();
             builder.Services.AddScoped<IVideoService, VideoService>();
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddAuthentication(options =>
             {
@@ -85,6 +88,8 @@ namespace CashBackDay
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapHub<ChatHub>("/chathub");
 
             app.UseSession();
 
