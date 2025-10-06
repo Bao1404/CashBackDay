@@ -1,4 +1,5 @@
-﻿using CashBackService.Interfaces;
+﻿using CashBackObject.Models;
+using CashBackService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CashBackDay.Controllers
@@ -8,17 +9,43 @@ namespace CashBackDay.Controllers
         private readonly IUserService _userService;
         private readonly ITradingFloorService _tradingFloorService;
         private readonly IVideoService _videoService;
+        private readonly IRequestService _requestService;
         private int? currentUser => HttpContext.Session.GetInt32("UserId");
-        public UserController(IUserService userService, ITradingFloorService tradingFloorService, IVideoService videoService)
+        public UserController(IUserService userService, ITradingFloorService tradingFloorService, IVideoService videoService, IRequestService requestService)
         {
             _userService = userService;
             _tradingFloorService = tradingFloorService;
             _videoService = videoService;
+            _requestService = requestService;
         }
         public IActionResult Contact()
         {
             ViewData["ActiveMenu"] = "ContactPage";
             return View();
+        }
+        [HttpPost("/SendRequest")]
+        public async Task<IActionResult> SendContactRequest(IFormCollection form)
+        {
+            var name = form["name"];
+            var email = form["email"];
+            var phone = form["phone"];
+            var category = form["category"];
+            var message = form["message"];
+
+            var request = new ContactRequest
+            {
+                RequesterName = name,
+                RequesterEmail = email,
+                RequesterPhone = phone,
+                RequestCategory = category,
+                RequestContent = message,
+                CreateAt = DateTime.Now,
+                Status = "Chưa đọc"
+            };
+            await _requestService.CreateContactRequest(request);
+            TempData["Message"] = "Gửi liên hệ thành công. Chúng tôi sẽ phản hồi trong thời gian sớm nhất.";
+            TempData["Type"] = "success";
+            return RedirectToAction("Contact", "User");
         }
         public async Task<IActionResult> Profile()
         {

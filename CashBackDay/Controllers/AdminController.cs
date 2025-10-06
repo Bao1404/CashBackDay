@@ -10,12 +10,14 @@ namespace CashBackDay.Controllers
         private readonly IUserService _userService;
         private readonly ITradingFloorService _tradingFloorService;
         private readonly IVideoService _videoService;
+        private readonly IRequestService _requestService;
         private int? currentUser => HttpContext.Session.GetInt32("UserId");
-        public AdminController(IUserService userService, ITradingFloorService tradingFloorService, IVideoService videoService)
+        public AdminController(IUserService userService, ITradingFloorService tradingFloorService, IVideoService videoService, IRequestService requestService)
         {
             _userService = userService;
             _tradingFloorService = tradingFloorService;
             _videoService = videoService;
+            _requestService = requestService;
         }
         public async Task<IActionResult> Index()
         {
@@ -337,6 +339,29 @@ namespace CashBackDay.Controllers
             }
             ViewBag.Videos = await _videoService.SearchVideos(input);
             return PartialView("Partials/_ListVideoPartial");
+        }
+        public async Task<IActionResult> ManageRequest()
+        {
+            if(currentUser == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.Requests = await _requestService.GetAllContactRequests();
+            ViewData["ActiveMenu"] = "ManageRequest";
+            return View();
+        }
+        [HttpPost("/Request/Update")]
+        public async Task<IActionResult> MarkAsRead(IFormCollection form)
+        {
+            var requestId = int.Parse(form["requestId"]);
+            var request = (await _requestService.GetAllContactRequests()).FirstOrDefault(r => r.RequestId == requestId);
+            if(request != null)
+            {
+                request.Status = "Đã đọc";
+                await _requestService.UpdateContactRequest(request);
+            }
+            ViewBag.Requests = await _requestService.GetAllContactRequests();
+            return RedirectToAction("ManageRequest", "Admin");
         }
     }
 }

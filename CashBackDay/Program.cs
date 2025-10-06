@@ -29,16 +29,19 @@ namespace CashBackDay
             builder.Services.AddScoped<TransactionHistoryDAO>();
             builder.Services.AddScoped<TradingFloorDAO>();
             builder.Services.AddScoped<VideoDAO>();
+            builder.Services.AddScoped<ContactRequestDAO>();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ITransactionRepository, TransactionHistoryRepository>();
             builder.Services.AddScoped<ITradingFloorRepository, TradingFloorRepository>();
             builder.Services.AddScoped<IVideoReposioty, VideoRepository>();
+            builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 
             builder.Services.AddScoped<ITransactionHistoryService, TransactionService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ITradingFloorService, TradingFloorService>();
             builder.Services.AddScoped<IVideoService, VideoService>();
+            builder.Services.AddScoped<IRequestService, RequestService>();
 
             builder.Services.AddAuthentication(options =>
             {
