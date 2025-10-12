@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using CashBackDay.Models;
+using CashBackService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CashBackDay.Controllers
@@ -7,15 +8,18 @@ namespace CashBackDay.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ITradingFloorService _tradingFloorService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ITradingFloorService tradingFloorService)
         {
             _logger = logger;
+            _tradingFloorService = tradingFloorService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             ViewData["ActiveMenu"] = "HomePage";
+            ViewBag.TradingFloors = await _tradingFloorService.GetAllTradingFloorsAsync();
             return View();
         }
 
