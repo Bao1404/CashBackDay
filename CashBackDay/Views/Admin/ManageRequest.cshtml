@@ -1,0 +1,96 @@
+﻿@using CashBackObject.Models
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Quản lý yêu cầu";
+    List<ContactRequest> requests = ViewBag.Requests as List<ContactRequest> ?? new List<ContactRequest>();
+}
+<main class="admin-main">
+    <!-- Platforms Section  -->
+    <h2 class="section-title">
+        <i class="fa-solid fa-question"></i>
+        Quản lý yêu cầu từ người dùng
+    </h2>
+    <div class="section-header" style="display: flex; justify-content: flex-start;">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="revenue-card primary">
+                <div class="card-icon">
+                    <i class="fa-solid fa-question"></i>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-number">@requests.Count()</h3>
+                    <p class="card-label">Tổng số yêu cầu đã được gửi</p>
+                </div>
+            </div>
+        </div>
+        <div class="section-actions">
+            <select class="form-select filter-select" id="platformStatusFilter">
+                <option value="">Tất cả trạng thái</option>
+                <option value="active">Đã xử lý</option>
+                <option value="inactive">Chưa xử lý</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Platform Statistics Cards  -->
+
+    <div class="admin-card">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-list me-2"></i>
+                Danh sách video
+            </h5>
+            <div class="card-actions">
+                <div class="btn-group" role="group">
+                    <a asp-controller="Admin" asp-action="ManageVideo" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-sync me-1"></i>Làm mới
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover" id="videoTable">
+                    <thead>
+                        <tr>
+                            <th>Người gửi</th>
+                            <th>Email</th>
+                            <th>SĐT</th>
+                            <th>Chủ đề</th>
+                            <th>Nội dung</th>
+                            <th>Ngày gửi</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requestTableBody">
+                        <partial name="Partials/_ListRequestPartial" />
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @if (requests.Count() == 0)
+        {
+            <div class="card-footer">
+                <div class="col-md-6">
+                    <nav aria-label="Platforms pagination">
+                        <ul class="pagination justify-content-end mb-0">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Trước</a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        }
+    </div>
+
+</main>

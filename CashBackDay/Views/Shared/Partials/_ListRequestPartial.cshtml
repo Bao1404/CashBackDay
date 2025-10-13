@@ -1,0 +1,49 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using CashBackObject.Models
+
+@{
+    var requests = ViewBag.Requests as List<ContactRequest> ?? new List<ContactRequest>();
+}
+
+@if (requests.Any())
+{
+    @foreach (var request in requests)
+    {
+        <tr>
+            <td class="user-name">@request.RequesterName</td>
+            <td class="user-email">@request.RequesterEmail</td>
+            <td class="user-phone">@request.RequesterPhone</td>
+            <td class="text">@request.RequestCategory</td>
+            <td class="text">@request.RequestContent</td>
+            <td class="registration-date">
+                @request.CreateAt?.ToString("dd/MM/yyyy")
+            </td>
+            <td><span class="status-badge status-@(request.Status.Equals("Đã đọc") ? "active" : "banned")"><i class="fas fa-circle"></i>@(request.Status.Equals("Đã đọc") ? "Đã xử lý" : "Chưa xử lý")</span></td>
+            <td>
+                @if (request.Status.Equals("Chưa đọc"))
+                {
+                    <form id="requestStatusForm" method="POST" action="/Request/Update">
+                        <div class="btn-group" role="group">
+                            <input type="hidden" name="requestId" value="@request.RequestId" />
+                            <button class="btn btn-sm btn-outline-danger" title="Đánh dấu đã xong">
+                                <i class="fa-regular fa-circle-check"></i>
+                            </button>
+                        </div>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="5" class="text-center text-muted py-4">
+            <i class="fas fa-info-circle me-2"></i>
+            Không có yêu cầu nào
+        </td>
+    </tr>
+}
