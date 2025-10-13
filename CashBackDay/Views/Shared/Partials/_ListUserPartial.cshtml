@@ -18,9 +18,9 @@
         <td class="registration-date">
             @user.CreateAt.ToString("dd/MM/yyyy")
         </td>
-        <td><span class="status-badge status-@(user.Status == true ? "active" : "banned")"><i class="fas fa-circle"></i>@(user.Status == true ? "Hoạt Động" : "Bị Cấm")</span></td>
+        <td><span class="status-badge status-@(user.Status == true ? "active" : "banned")"><i class="fas fa-circle"></i>@(user.IsBan == false ? "Hoạt Động" : "Bị Cấm")</span></td>
         <td>
-            @if (user.Status == true)
+            @if (user.IsBan == false)
             {
                 <div class="btn-group" role="group">
                     <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#banUserModal-@user.UserId" title="Cấm">
@@ -31,7 +31,7 @@
             else
             {
                 <div class="btn-group" role="group">
-                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#unbanUserModal-@user.UserId" title="Cấm">
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#unbanUserModal-@user.UserId" title="Bỏ Cấm">
                         <i class="fas fa-undo"></i>
                     </button>
                 </div>

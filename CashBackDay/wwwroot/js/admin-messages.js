@@ -31,16 +31,19 @@ class AdminMessenger {
 
             // User connected
             this.connection.on("UserConnected", (userId, userName, avatarUrl, timestamp) => {
+                console.log('User connected:', userId, userName);
                 this.handleUserConnected(userId, userName, avatarUrl, timestamp);
             });
 
             // User disconnected
             this.connection.on("UserDisconnected", (userId, timestamp) => {
+                console.log('User disconnected:', userId);
                 this.handleUserDisconnected(userId);
             });
 
             // Receive message from user
             this.connection.on("ReceiveUserMessage", (userId, userName, avatarUrl, message, timestamp, messageId, conversationId) => {
+                console.log('ReceiveUserMessage event fired:', { userId, userName, message, conversationId });
                 this.receiveMessage(userId, userName, avatarUrl, message, timestamp, messageId, conversationId);
             });
 
@@ -100,36 +103,52 @@ class AdminMessenger {
                     }, 2000);
                 }
             });
+
+            // Add Enter key to send message
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.sendMessage();
+                }
+            });
+        }
+
+        // Add click event to send button
+        const sendBtn = document.getElementById('sendMessageBtn');
+        if (sendBtn) {
+            sendBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.sendMessage();
+            });
+        }
+
+        // If using a form, prevent default submit
+        const messageForm = document.getElementById('messageForm');
+        if (messageForm) {
+            messageForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.sendMessage();
+                return false;
+            });
         }
     }
 
     async loadConversations() {
         try {
-            // Get all conversations from API
             const response = await fetch('/api/Chat/conversations');
             if (!response.ok) throw new Error('Failed to load conversations');
             
             const conversations = await response.json();
             
-            // Clear existing conversations
             this.conversations.clear();
             
-            // Load conversations with active status
             for (const conv of conversations.filter(c => c.status === 'Active')) {
                 try {
-                    // Get messages for this conversation
                     const messagesResponse = await fetch(`/api/Chat/messages/${conv.conversationId}`);
                     const messages = await messagesResponse.json();
                     
-                    // Get user info from messages (sender)
-                    let userName = 'User';
-                    let avatarUrl = '/placeholder.svg?height=48&width=48&text=User';
-                    
-                    if (messages.length > 0) {
-                        // Try to get user info from your user service
-                        // For now, use userId from conversation
-                        userName = `User #${conv.userId}`;
-                    }
+                    let userName = conv.userName;
+                    let avatarUrl = conv.userAvatar;
                     
                     const lastMessage = messages.length > 0 
                         ? messages[messages.length - 1] 
@@ -147,7 +166,7 @@ class AdminMessenger {
                         lastMessage: lastMessage?.content || 'Chưa có tin nhắn',
                         lastMessageTime: lastMessage?.createdAt || conv.createdAt,
                         unreadCount: unreadCount,
-                        isOnline: false, // Will be updated by SignalR
+                        isOnline: conv.userStatus === true, // Lấy từ DB
                         status: conv.status,
                         messages: messages
                     });
@@ -169,16 +188,40 @@ class AdminMessenger {
         const unreadCount = Array.from(this.conversations.values())
             .reduce((sum, conv) => sum + conv.unreadCount, 0);
         
-        // Update UI
+        const onlineCount = Array.from(this.conversations.values())
+            .filter(conv => conv.isOnline).length;
+        
+        // Update UI - Conversations count
         const conversationsCount = document.querySelector('.conversations-count');
         if (conversationsCount) {
             conversationsCount.textContent = `${totalConversations} cuộc trò chuyện`;
         }
         
         // Update filter badges
+        const allFilterCount = document.querySelector('.filter-btn[data-filter="all"] .filter-count');
+        if (allFilterCount) {
+            allFilterCount.textContent = totalConversations;
+        }
+        
         const unreadFilter = document.querySelector('.filter-btn[data-filter="unread"] .filter-count');
         if (unreadFilter) {
             unreadFilter.textContent = unreadCount;
+        }
+        
+        // Update placeholder stats
+        const placeholderTotalStat = document.querySelector('.chat-placeholder .stat-card:nth-child(1) .stat-number');
+        if (placeholderTotalStat) {
+            placeholderTotalStat.textContent = totalConversations;
+        }
+        
+        const placeholderUnreadStat = document.querySelector('.chat-placeholder .stat-card:nth-child(2) .stat-number');
+        if (placeholderUnreadStat) {
+            placeholderUnreadStat.textContent = unreadCount;
+        }
+        
+        const placeholderOnlineStat = document.querySelector('.chat-placeholder .stat-card:nth-child(3) .stat-number');
+        if (placeholderOnlineStat) {
+            placeholderOnlineStat.textContent = onlineCount;
         }
     }
 
@@ -273,8 +316,14 @@ class AdminMessenger {
         // Load messages
         this.loadChatMessages(conversationId);
 
-        // Mark as read
+        // Mark as read - CẢ LOCAL VÀ SERVER
         this.markConversationAsRead(conversationId);
+        
+        // Mark as read on server - THÊM dòng này
+        if (this.connection && this.adminId) {
+            this.connection.invoke("MarkConversationAsRead", parseInt(conversationId), this.adminId)
+                .catch(err => console.error("Error marking as read:", err));
+        }
     }
 
     loadChatMessages(conversationId) {
@@ -285,7 +334,7 @@ class AdminMessenger {
         if (!conv || !conv.messages) return;
 
         container.innerHTML = conv.messages.map(msg => {
-            const sender = msg.senderId === conv.userId ? 'user' : 'admin';
+            const sender = msg.senderId === 1 ? 'admin' : 'user';
             return this.createMessageBubble({
                 sender: sender,
                 message: msg.content,
@@ -305,7 +354,7 @@ class AdminMessenger {
         return `
             <div class="message-bubble ${msg.sender}">
                 <div class="message-content">${this.escapeHtml(msg.message)}</div>
-                <small class="message-time">${time}</small>
+                <small class="message-time ${msg.sender}">${time}</small>
             </div>
         `;
     }
@@ -365,6 +414,8 @@ class AdminMessenger {
     }
 
     receiveMessage(userId, userName, avatarUrl, message, timestamp, messageId, conversationId) {
+        console.log('Received message from user:', { userId, userName, message, conversationId });
+        
         // Find or update conversation
         let conv = this.conversations.get(conversationId.toString());
         
@@ -390,10 +441,21 @@ class AdminMessenger {
             conv.userName = userName;
             conv.avatar = avatarUrl;
             
+            // Add message to messages array
+            const newMessage = {
+                messageId: messageId,
+                conversationId: conversationId,
+                senderId: userId,
+                content: message,
+                createdAt: timestamp,
+                isRead: false
+            };
+            conv.messages.push(newMessage);
+            
             if (this.currentConversation?.conversationId !== conversationId) {
                 conv.unreadCount++;
             } else {
-                // Add message to current chat
+                // Currently viewing this conversation - add message to UI
                 const msgData = {
                     sender: 'user',
                     message: message,
@@ -408,17 +470,20 @@ class AdminMessenger {
             }
         }
 
-        // Reload messages from API to keep in sync
-        this.reloadConversationMessages(conversationId);
-
+        // Update conversations list
         this.renderConversationsList();
         this.updateStats();
         
-        // Show notification
+        // Show notification if not viewing this conversation
         if (this.currentConversation?.conversationId !== conversationId) {
             this.showToast(`Tin nhắn mới từ ${userName}`, "info");
             this.playNotificationSound();
         }
+        
+        // Reload messages from API in background to keep in sync
+        setTimeout(() => {
+            this.reloadConversationMessages(conversationId);
+        }, 500);
     }
 
     async reloadConversationMessages(conversationId) {
@@ -444,6 +509,7 @@ class AdminMessenger {
             }
         });
         this.renderConversationsList();
+        this.updateStats(); // THÊM dòng này
     }
 
     handleUserDisconnected(userId) {
@@ -453,6 +519,7 @@ class AdminMessenger {
             }
         });
         this.renderConversationsList();
+        this.updateStats(); // THÊM dòng này
     }
 
     updateTypingStatus(userId, userName, isTyping) {
@@ -583,8 +650,12 @@ window.adminMessenger = adminMessenger;
 
 // Functions called from HTML
 function sendMessage(event) {
-    event?.preventDefault();
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
     adminMessenger?.sendMessage();
+    return false; // Extra safety
 }
 
 function viewUserProfile() {

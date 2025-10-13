@@ -5,6 +5,9 @@
         public int MessageId { get; set; }
         public int ConversationId { get; set; }
         public int SenderId { get; set; }
+        public string? SenderName { get; set; }
+        public string? SenderAvatar { get; set; }
+        public bool? SenderStatus { get; set; }
         public int ReceiverId { get; set; }
         public string Content { get; set; } = null!;
         public string? MessageType { get; set; }

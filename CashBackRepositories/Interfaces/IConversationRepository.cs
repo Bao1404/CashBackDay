@@ -12,5 +12,6 @@ namespace CashBackRepositories.Interfaces
         Task<List<Conversation>> GetAllConversation();
         Task<Conversation> GetConversationById(int id);
         Task<Conversation> CreateConversation(Conversation conversation);
+        Task<Conversation> UpdateConversation(Conversation conversation);
     }
 }

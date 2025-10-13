@@ -19,5 +19,6 @@ namespace CashBackService.Services
         public Task<List<Conversation>> GetAllConversation() => _conversationRepository.GetAllConversation();
         public Task<Conversation> GetConversationById(int id) => _conversationRepository.GetConversationById(id);
         public Task<Conversation> CreateConversation(Conversation conversation) => _conversationRepository.CreateConversation(conversation);
+        public Task<Conversation> UpdateConversation(Conversation conversation) => _conversationRepository.UpdateConversation(conversation);
     }
 }

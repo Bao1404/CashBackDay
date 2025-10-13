@@ -11,5 +11,7 @@ namespace CashBackRepositories.Interfaces
     {
         Task<List<Message>> GetMessageByConversationId(int id);
         Task<Message> CreateMessage(CashBackObject.Models.Message message);
+        Task<Message> UpdateMessage(CashBackObject.Models.Message message);
+        Task MarkMessagesAsRead(int conversationId, int userId); // THÊM method này
     }
 }

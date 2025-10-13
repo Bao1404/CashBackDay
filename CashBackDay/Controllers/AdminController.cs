@@ -76,7 +76,7 @@ namespace CashBackDay.Controllers
             var userToBan = await _userService.GetUserById(userId);
             if (userToBan != null)
             {
-                userToBan.Status = false;
+                userToBan.IsBan = true;
                 await _userService.UpdateAccount(userToBan);
             }
             return RedirectToAction("ManageUser", "Admin");
@@ -97,7 +97,7 @@ namespace CashBackDay.Controllers
             var userToUnban = await _userService.GetUserById(userId);
             if (userToUnban != null)
             {
-                userToUnban.Status = true;
+                userToUnban.IsBan = false;
                 await _userService.UpdateAccount(userToUnban);
             }
             return RedirectToAction("ManageUser", "Admin");

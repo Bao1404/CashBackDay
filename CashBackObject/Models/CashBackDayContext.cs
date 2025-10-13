@@ -45,7 +45,7 @@ public partial class CashBackDayContext : DbContext
     {
         modelBuilder.Entity<AffiliateCommission>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Affiliat__3214EC073780FA91");
+            entity.HasKey(e => e.Id).HasName("PK__Affiliat__3214EC072A7C8625");
 
             entity.Property(e => e.CommissionAmount).HasColumnType("decimal(18, 8)");
             entity.Property(e => e.CommissionCurrency)
@@ -68,7 +68,7 @@ public partial class CashBackDayContext : DbContext
 
         modelBuilder.Entity<ContactRequest>(entity =>
         {
-            entity.HasKey(e => e.RequestId).HasName("PK__ContactR__33A8517A81E7BB48");
+            entity.HasKey(e => e.RequestId).HasName("PK__ContactR__33A8517A522BA4B7");
 
             entity.Property(e => e.RequestCategory).HasMaxLength(200);
             entity.Property(e => e.RequesterEmail)
@@ -83,7 +83,7 @@ public partial class CashBackDayContext : DbContext
 
         modelBuilder.Entity<Conversation>(entity =>
         {
-            entity.HasKey(e => e.ConversationId).HasName("PK__Conversa__C050D87765FE6A46");
+            entity.HasKey(e => e.ConversationId).HasName("PK__Conversa__C050D87789C60692");
 
             entity.HasIndex(e => e.UserId, "UQ_Conversation_User").IsUnique();
 
@@ -101,7 +101,7 @@ public partial class CashBackDayContext : DbContext
 
         modelBuilder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__Messages__C87C0C9C942EC7B1");
+            entity.HasKey(e => e.MessageId).HasName("PK__Messages__C87C0C9CE19B1042");
 
             entity.Property(e => e.AttachmentUrl).IsUnicode(false);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
@@ -128,7 +128,7 @@ public partial class CashBackDayContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E12E6C9C5D5");
+            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E125083753A");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.IsRead).HasDefaultValue(false);
@@ -142,7 +142,7 @@ public partial class CashBackDayContext : DbContext
 
         modelBuilder.Entity<RefundRequest>(entity =>
         {
-            entity.HasKey(e => e.RequestId).HasName("PK__RefundRe__33A8517A19167DFC");
+            entity.HasKey(e => e.RequestId).HasName("PK__RefundRe__33A8517A2D6A5092");
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 8)");
             entity.Property(e => e.CryptoSymbol)
@@ -166,9 +166,9 @@ public partial class CashBackDayContext : DbContext
 
         modelBuilder.Entity<TradingFloor>(entity =>
         {
-            entity.HasKey(e => e.FloorId).HasName("PK__TradingF__49D1E84B2B860D7F");
+            entity.HasKey(e => e.FloorId).HasName("PK__TradingF__49D1E84BC1F876B4");
 
-            entity.HasIndex(e => e.FloorName, "UQ__TradingF__3D098F35A7862D08").IsUnique();
+            entity.HasIndex(e => e.FloorName, "UQ__TradingF__3D098F353244E68F").IsUnique();
 
             entity.Property(e => e.FloorName).HasMaxLength(100);
             entity.Property(e => e.FloorUrl).IsUnicode(false);
@@ -181,7 +181,7 @@ public partial class CashBackDayContext : DbContext
 
         modelBuilder.Entity<TransactionHistory>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A6BE96F718D");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A6B8662C193");
 
             entity.ToTable("TransactionHistory");
 
@@ -212,9 +212,9 @@ public partial class CashBackDayContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CEFF0C9B9");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4C1E106DE3");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__A9D10534F4E7E360").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__A9D1053407295648").IsUnique();
 
             entity.Property(e => e.AvatarUrl)
                 .HasMaxLength(200)
@@ -225,6 +225,9 @@ public partial class CashBackDayContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.FullName).HasMaxLength(100);
             entity.Property(e => e.Gender).HasMaxLength(10);
+            entity.Property(e => e.IsBan)
+                .HasDefaultValue(true)
+                .HasColumnName("isBan");
             entity.Property(e => e.PasswordHash)
                 .HasMaxLength(200)
                 .IsUnicode(false);
@@ -234,12 +237,11 @@ public partial class CashBackDayContext : DbContext
             entity.Property(e => e.Role)
                 .HasMaxLength(20)
                 .HasDefaultValue("User");
-            entity.Property(e => e.Status).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<Video>(entity =>
         {
-            entity.HasKey(e => e.VideoId).HasName("PK__Videos__BAE5126A51781161");
+            entity.HasKey(e => e.VideoId).HasName("PK__Videos__BAE5126A4E7619FC");
 
             entity.Property(e => e.Category).HasMaxLength(100);
             entity.Property(e => e.Duration)
@@ -252,7 +254,7 @@ public partial class CashBackDayContext : DbContext
 
         modelBuilder.Entity<Wallet>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Wallets__3214EC079BD8C5CF");
+            entity.HasKey(e => e.Id).HasName("PK__Wallets__3214EC0735AC9CD6");
 
             entity.HasIndex(e => new { e.UserId, e.CryptoSymbol }, "UQ_Wallet_User_Crypto").IsUnique();
 

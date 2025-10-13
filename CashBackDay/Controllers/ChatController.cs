@@ -21,13 +21,35 @@ namespace CashBackDay.Controllers
         public async Task<IActionResult> GetConversationsById(int id)
         {
             var conversations = await _conversationService.GetConversationById(id);
-            return Ok(conversations);
+            var conversationDTO = new ConversationDTO
+            {
+                ConversationId = conversations.ConversationId,
+                UserId = conversations.UserId,
+                UserName = conversations.User.FullName,
+                UserAvatar = conversations.User.AvatarUrl,
+                UserStatus = conversations.User.Status,
+                CreatedAt = conversations.CreatedAt,
+                UpdatedAt = conversations.UpdatedAt,
+                Status = conversations.Status
+            };
+            return Ok(conversationDTO);
         }
         [HttpGet("conversations")]
         public async Task<IActionResult> GetAllConversations()
         {
             var conversations = await _conversationService.GetAllConversation();
-            return Ok(conversations);
+            var conversationDTOs = conversations.Select(c => new ConversationDTO
+            {
+                ConversationId = c.ConversationId,
+                UserId = c.UserId,
+                UserName = c.User.FullName,
+                UserAvatar = c.User.AvatarUrl,
+                UserStatus = c.User.Status,
+                CreatedAt = c.CreatedAt,
+                UpdatedAt = c.UpdatedAt,
+                Status = c.Status
+            }).ToList();
+            return Ok(conversationDTOs);
         }
         [HttpPost("conversations")]
         public async Task<IActionResult> CreateConversation([FromBody] ConversationDTO conversation)
@@ -46,7 +68,19 @@ namespace CashBackDay.Controllers
         public async Task<IActionResult> GetMessagesByConversationId(int conversationId)
         {
             var messages = await _messageService.GetMessageByConversationId(conversationId);
-            return Ok(messages);
+            var MessageDTOs = messages.Select(m => new MessageDTO
+            {
+                MessageId = m.MessageId,
+                ConversationId = m.ConversationId,
+                SenderId = m.SenderId,
+                ReceiverId = m.ReceiverId,
+                Content = m.Content,
+                MessageType = m.MessageType,
+                AttachmentUrl = m.AttachmentUrl,
+                IsRead = m.IsRead,
+                CreatedAt = m.CreatedAt
+            }).ToList();
+            return Ok(MessageDTOs);
         }
         [HttpPost("messages")]
         public async Task<IActionResult> CreateMessage([FromBody] MessageDTO message)

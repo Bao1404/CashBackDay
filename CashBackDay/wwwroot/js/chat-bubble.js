@@ -126,7 +126,7 @@ class UserChatBubble {
                     
                     <div class="chat-bubble-input-area">
                         <form class="chat-input-form" onsubmit="userChat.sendMessage(event)">
-                            <div class="chat-input-wrapper">
+                            <div class="chat-bubble-input-wrapper">
                                 <textarea 
                                     class="chat-bubble-input" 
                                     id="userChatInput" 
@@ -267,9 +267,11 @@ class UserChatBubble {
         });
 
         return `
-            <div class="message-bubble ${sender}">
-                <div class="message-content">${this.escapeHtml(message)}</div>
+            <div class="chat-bubble-message ${sender}">
+                <div class="message-bubble ${sender}">
+                    <div class="message-content">${this.escapeHtml(message)}</div>
                 <small class="message-time">${time}</small>
+            </div>
             </div>
         `;
     }

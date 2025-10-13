@@ -17,7 +17,7 @@ namespace CashBackDAO
         }
         public async Task<List<Conversation>> GetAllConversation()
         {
-            return await _context.Conversations.ToListAsync();
+            return await _context.Conversations.Include(c => c.User).ToListAsync();
         }
         public async Task<Conversation> GetConversationById(int id)
         {
@@ -26,6 +26,12 @@ namespace CashBackDAO
         public async Task<Conversation> CreateConversation(Conversation conversation)
         {
             _context.Conversations.Add(conversation);
+            await _context.SaveChangesAsync();
+            return conversation;
+        }
+        public async Task<Conversation> UpdateConversation(Conversation conversation)
+        {
+            _context.Conversations.Update(conversation);
             await _context.SaveChangesAsync();
             return conversation;
         }

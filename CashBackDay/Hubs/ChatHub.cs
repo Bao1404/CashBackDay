@@ -101,7 +101,11 @@ namespace CashBackDay.Hubs
 
                 // Update conversation timestamp
                 var conversation = await _conversationService.GetConversationById(conversationId);
-                conversation.UpdatedAt = DateTime.Now;
+                if (conversation != null)
+                {
+                    conversation.UpdatedAt = DateTime.Now;
+                    await _conversationService.UpdateConversation(conversation); // THÊM dòng này
+                }
 
                 // Send to specific user in real-time
                 if (_connections.TryGetValue(userId.ToString(), out var userConnectionId))
@@ -141,11 +145,26 @@ namespace CashBackDay.Hubs
             }
         }
 
+        // Admin marks messages as read
+        public async Task MarkConversationAsRead(int conversationId, int adminId)
+        {
+            try
+            {
+                await _messageService.MarkMessagesAsRead(conversationId, adminId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error marking messages as read: {ex.Message}");
+            }
+        }
+
         public override async Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();
             var userId = httpContext?.Session.GetInt32("UserId");
             var userRole = httpContext?.Session.GetString("Role");
+
+            Console.WriteLine($"User connected: UserId={userId}, Role={userRole}"); // Debug log
 
             if (userId.HasValue)
             {
@@ -155,6 +174,7 @@ namespace CashBackDay.Hubs
                 if (userRole == "Admin")
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, "Admins");
+                    Console.WriteLine($"Admin {userId.Value} added to Admins group"); // Debug log
                     await Clients.Group("Admins").SendAsync("AdminConnected", userId.Value);
                 }
                 else
@@ -169,6 +189,10 @@ namespace CashBackDay.Hubs
                         user?.AvatarUrl ?? "/placeholder.svg",
                         DateTime.Now);
                 }
+            }
+            else
+            {
+                Console.WriteLine("User connected without UserId in session"); // Debug log
             }
 
             await base.OnConnectedAsync();

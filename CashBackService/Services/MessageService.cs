@@ -18,5 +18,8 @@ namespace CashBackService.Services
         }
         public Task<List<Message>> GetMessageByConversationId(int id) => _messageRepository.GetMessageByConversationId(id);
         public Task<Message> CreateMessage(CashBackObject.Models.Message message) => _messageRepository.CreateMessage(message);
+        public Task<Message> UpdateMessage(CashBackObject.Models.Message message) => _messageRepository.UpdateMessage(message);
+        public Task MarkMessagesAsRead(int conversationId, int userId) 
+            => _messageRepository.MarkMessagesAsRead(conversationId, userId);
     }
 }

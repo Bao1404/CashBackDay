@@ -19,11 +19,11 @@
                         <i class="fas fa-comments me-2"></i>
                         Tin nhắn khách hàng
                     </h4>
-                    <span class="conversations-count">12 cuộc trò chuyện</span>
+                    <span class="conversations-count">0 cuộc trò chuyện</span>
                 </div>
             </div>
 
-            <div class="conversations-search">
+            @* <div class="conversations-search">
                 <div class="search-input-group">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" id="searchMessages" class="search-input" placeholder="Tìm kiếm tin nhắn...">
@@ -31,15 +31,15 @@
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-            </div>
+            </div> *@
 
             <div class="conversations-filters">
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-filter="all">
-                        Tất cả <span class="filter-count">12</span>
+                        Tất cả <span class="filter-count">0</span>
                     </button>
                     <button class="filter-btn" data-filter="unread">
-                        Chưa đọc <span class="filter-count">5</span>
+                        Chưa đọc <span class="filter-count">0</span>
                     </button>
                 </div>
             </div>
@@ -62,15 +62,15 @@
                     <p>Chọn một khách hàng từ danh sách bên trái để bắt đầu trò chuyện</p>
                     <div class="placeholder-stats">
                         <div class="stat-card">
-                            <div class="stat-number">12</div>
+                            <div class="stat-number">0</div>
                             <div class="stat-label">Cuộc trò chuyện</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number">5</div>
+                            <div class="stat-number">0</div>
                             <div class="stat-label">Chưa đọc</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number">3</div>
+                            <div class="stat-number">0</div>
                             <div class="stat-label">Online</div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="chat-header-actions">
+                    @* <div class="chat-header-actions">
                         <button class="btn btn-sm btn-outline-info" onclick="viewUserProfile()" title="Xem hồ sơ">
                             <i class="fas fa-user"></i>
                         </button>
@@ -104,7 +104,7 @@
                         <button class="btn btn-sm btn-outline-danger" onclick="blockUser()" title="Chặn người dùng">
                             <i class="fas fa-ban"></i>
                         </button>
-                    </div>
+                    </div> *@
                 </div>
 
                 <!-- Independent scrollable chat messages area -->
@@ -115,24 +115,22 @@
                 </div>
 
                 <!-- Typing Indicator -->
-                <div class="typing-indicator-container" id="typingIndicator" style="display: none;">
-                    <div class="typing-indicator">
-                        <div class="typing-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <span class="typing-text">Khách hàng đang nhập...</span>
+                @* <div class="chat-typing-indicator" id="chatTypingIndicator">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </div>
-                </div>
+                    <span class="typing-text">Admin đang nhập...</span>
+                </div> *@
 
                 <!-- Chat Input Area -->
                 <div class="chat-input-section">
                     <!-- Message Input -->
                     <div class="chat-input-container" id="chatInputContainer" style="display: block;">
-                        <form class="chat-input-form" onsubmit="sendMessage(event)">
+                        <form class="chat-input-form" onsubmit="sendMessage(event); return false;">
                             <div class="chat-input-wrapper">
-                                <input type="text" class="chat-input" id="messageInput" placeholder="Type your message...">
+                                <textarea type="text" class="chat-input" rows="1" id="messageInput" placeholder="Type your message..."></textarea>
                                 <button type="button" class="attachment-btn" onclick="attachFile()">
                                     <i class="fas fa-paperclip"></i>
                                 </button>
@@ -155,6 +153,41 @@
 <script src="~/js/admin-messages.js" asp-append-version="true"></script>
 
 <script>
+    // Kiểm tra xem file JS đã load chưa
+    console.log('Messages.cshtml script loaded');
+    console.log('adminMessenger at page load:', window.adminMessenger);
+    
+    // Đợi một chút rồi kiểm tra lại
+    setTimeout(() => {
+        console.log('adminMessenger after 1 second:', window.adminMessenger);
+        if (!window.adminMessenger) {
+            console.error('AdminMessenger failed to initialize!');
+        }
+    }, 1000);
+
+    // Các hàm khác...
+    // function sendMessage(event) {
+    //     console.log('=== sendMessage global function called ===');
+        
+    //     if (event) {
+    //         console.log('Event exists, preventing default');
+    //         event.preventDefault();
+    //         event.stopPropagation();
+    //     }
+        
+    //     console.log('window.adminMessenger:', window.adminMessenger);
+        
+    //     if (window.adminMessenger) {
+    //         console.log('Calling adminMessenger.sendMessage()');
+    //         window.adminMessenger.sendMessage();
+    //     } else {
+    //         console.error('ERROR: window.adminMessenger is not initialized!');
+    //         alert('Admin messenger chưa sẵn sàng. Vui lòng tải lại trang.');
+    //     }
+        
+    //     return false;
+    // }
+
     // Mobile sidebar toggle
     document.getElementById('sidebarToggle')?.addEventListener('click', function() {
         document.getElementById('adminSidebar').classList.toggle('show');
@@ -202,12 +235,6 @@
         const modal = new bootstrap.Modal(document.getElementById('messageTemplatesModal'));
         loadMessageTemplates();
         modal.show();
-    }
-
-    function sendMessage() {
-        if (window.adminMessenger) {
-            window.adminMessenger.sendMessage();
-        }
     }
 
     function loadMessageTemplates() {
@@ -279,3 +306,7 @@
         }
     }
 </script>
+
+<style>
+
+</style>
