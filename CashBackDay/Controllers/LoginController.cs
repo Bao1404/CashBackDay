@@ -29,10 +29,16 @@ namespace CashBackDay.Controllers
                 var user = await _userService.GetUserLogin(email, password);
                 if (user != null)
                 {
-                    HttpContext.Session.SetInt32("UserId", user.UserId);
+                    // CẬP NHẬT: Set user online khi login
+                    user.Status = true;
+                    await _userService.UpdateAccount(user);
+                    
+                        HttpContext.Session.SetInt32("UserId", user.UserId);
                     HttpContext.Session.SetString("UserName", user.FullName);
                     HttpContext.Session.SetString("AvatarUrl", user.AvatarUrl ?? string.Empty);
-                    if (user.Email.Equals("lethebao1404@gmail.com"))
+                    HttpContext.Session.SetString("Role", user.Role ?? "User"); // THÊM dòng này
+
+                    if (user.Role == "Admin")
                     {
                         return RedirectToAction("ManageUser", "Admin");
                     }
@@ -75,7 +81,6 @@ namespace CashBackDay.Controllers
         [HttpGet("/GoogleResponse")]
         public async Task<IActionResult> GoogleResponse(string returnUrl = "/")
         {
-            // After Google challenge, user will be signed in to the cookie scheme (because DefaultSignInScheme is cookies).
             try
             {
                 var userPrincipal = HttpContext.User;
@@ -104,21 +109,28 @@ namespace CashBackDay.Controllers
                     {
                         Email = email,
                         FullName = name,
-                        PasswordHash = Guid.NewGuid().ToString(), // Random password, user won't use it
+                        PasswordHash = Guid.NewGuid().ToString(),
                         Phone = phone,
                         Dob = string.IsNullOrEmpty(dob) ? (DateOnly?)null : DateOnly.Parse(dob),
-                        AvatarUrl = "https://static.vecteezy.com/system/resources/previews/009/292/244/large_2x/default-avatar-icon-of-social-media-user-vector.jpg",
+                        AvatarUrl = avatar ?? "https://static.vecteezy.com/system/resources/previews/009/292/244/large_2x/default-avatar-icon-of-social-media-user-vector.jpg",
                         Role = "User",
-                        Status = true,
+                        Status = true, // Set online khi tạo user mới
                         CreateAt = DateTime.UtcNow,
                     };
                     await _userService.CreateAccount(user);
                     existingUser = await _userService.CheckEmailExist(email);
                 }
+                
+                // CẬP NHẬT: Set user online khi login
+                existingUser.Status = true;
+                await _userService.UpdateAccount(existingUser);
+                
                 HttpContext.Session.SetInt32("UserId", existingUser.UserId);
                 HttpContext.Session.SetString("UserName", existingUser.FullName ?? string.Empty);
                 HttpContext.Session.SetString("AvatarUrl", existingUser.AvatarUrl ?? string.Empty);
-                if (existingUser.Email.Equals("lethebao1404@gmail.com"))
+                HttpContext.Session.SetString("Role", existingUser.Role ?? "User");
+                
+                if (existingUser.Role == "Admin" || existingUser.Email.Equals("lethebao1404@gmail.com"))
                 {
                     return RedirectToAction("ManageUser", "Admin");
                 }

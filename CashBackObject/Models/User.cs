@@ -27,6 +27,8 @@ public partial class User
 
     public bool? Status { get; set; }
 
+    public bool? IsBan { get; set; }
+
     public virtual Conversation? Conversation { get; set; }
 
     public virtual ICollection<Message> MessageReceivers { get; set; } = new List<Message>();
