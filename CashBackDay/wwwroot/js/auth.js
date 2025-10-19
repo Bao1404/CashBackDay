@@ -234,10 +234,10 @@ function nextStep(step) {
     const currentStep = document.querySelector(".form-step.active")
     const currentStepNumber = getCurrentStepNumber()
 
-    // Validate current step
-    if (!validateCurrentStep(currentStep)) {
-        return
-    }
+     //Validate current step
+    //if (!validateCurrentStep(currentStep)) {
+    //    return
+    //}
 
     // Hide current step
     currentStep.classList.remove("active")
@@ -270,7 +270,7 @@ function getCurrentStepNumber() {
     return Number.parseInt(activeStep.id.replace("step", ""))
 }
 
-// Validate current step
+ //Validate current step
 function validateCurrentStep(stepElement) {
     const stepNumber = Number.parseInt(stepElement.id.replace("step", ""))
 
@@ -285,14 +285,13 @@ function validateCurrentStep(stepElement) {
 }
 
 function validateStep1() {
-    const firstName = document.getElementById("firstName").value.trim()
-    const lastName = document.getElementById("lastName").value.trim()
+    const fullName = document.getElementById("fullName").value.trim()
     const email = document.getElementById("registerEmail").value.trim()
     const phone = document.getElementById("phone").value.trim()
     const password = document.getElementById("registerPassword").value
     const confirmPassword = document.getElementById("confirmPassword").value
 
-    if (!firstName || !lastName) {
+    if (!fullName) {
         showToast("Vui lòng nhập đầy đủ họ tên!", "danger")
         return false
     }
