@@ -55,7 +55,7 @@ namespace CashBackDay.Controllers
             }
             catch (Exception ex)
             {
-                TempData["Message"] = "Có lỗi xảy ra";
+                TempData["Message"] = $"Có lỗi xảy ra, mã lỗi: {ex}";
                 TempData["Type"] = "error";
                 return RedirectToAction("Index", "Login");
             }

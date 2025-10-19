@@ -29,14 +29,18 @@ namespace CashBackDay.Controllers
                 var existingEmail = await _userService.CheckEmailExist(vm.Email);
                 if (existingEmail != null)
                 {
-                    ViewBag.ErrorMessage = "Email này đã được đăng ký";
+                    TempData["Message"] = "Email này đã được đăng ký";
+                    TempData["Type"] = "error";
+                    //ViewBag.ErrorMessage = "Email này đã được đăng ký";
                     return View("Index", vm);
                 }
 
                 var existingPhone = await _userService.CheckPhoneExist(vm.PhoneNumber);
                 if (existingPhone != null)
                 {
-                    ViewBag.ErrorMessage = "Số điện thoại này đã được đăng ký";
+                    TempData["Message"] = "Số điện thoại này đã được đăng ký";
+                    TempData["Type"] = "error";
+                    //ViewBag.ErrorMessage = "Số điện thoại này đã được đăng ký";
                     return View("Index", vm);
                 }
 
@@ -53,11 +57,13 @@ namespace CashBackDay.Controllers
 
                 await _userService.CreateAccount(user);
 
+                TempData["Message"] = "Đăng ký thành công";
+                TempData["Type"] = "success";
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {
-                TempData["Message"] = "Có lỗi xảy ra";
+                TempData["Message"] = $"Có lỗi xảy ra, mã lỗi: {ex}";
                 TempData["Type"] = "error";
                 return RedirectToAction("Index", "Register");
             }
