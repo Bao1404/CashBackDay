@@ -1,41 +1,57 @@
-﻿
+﻿@using CashBackObject.Models
+
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@foreach (var user in ViewBag.Users)
+@{
+    var users = ViewBag.Users as List<User> ?? new List<User>();
+}
+@if (users.Any())
 {
-    <tr>
-        <td>
-            <div class="d-flex align-items-center">
-                <img src="@user.AvatarUrl" alt="User" class="user-avatar me-3">
-                <div>
-                    <div class="user-name">@user.FullName</div>
+    foreach (var user in ViewBag.Users)
+    {
+        <tr>
+            <td>
+                <div class="d-flex align-items-center">
+                    <img src="@user.AvatarUrl" alt="User" class="user-avatar me-3">
+                    <div>
+                        <div class="user-name">@user.FullName</div>
+                    </div>
                 </div>
-            </div>
-        </td>
-        <td class="user-email">@user.Email</td>
-        <td class="user-phone">@user.Phone</td>
-        <td class="registration-date">
-            @user.CreateAt.ToString("dd/MM/yyyy")
-        </td>
-        <td><span class="status-badge status-@(user.Status == true ? "active" : "banned")"><i class="fas fa-circle"></i>@(user.Status == true ? "Online" : "Offline")</span></td>
-        <td>
-            @if (user.IsBan == false)
-            {
-                <div class="btn-group" role="group">
-                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#banUserModal-@user.UserId" title="Cấm">
-                        <i class="fas fa-ban"></i>
-                    </button>
-                </div>
-            }
-            else
-            {
-                <div class="btn-group" role="group">
-                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#unbanUserModal-@user.UserId" title="Bỏ Cấm">
-                        <i class="fas fa-undo"></i>
-                    </button>
-                </div>
-            }
-        </td>
-    </tr>
+            </td>
+            <td class="user-email">@user.Email</td>
+            <td class="user-phone">@user.Phone</td>
+            <td class="registration-date">
+                @user.CreateAt.ToString("dd/MM/yyyy")
+            </td>
+            <td><span class="status-badge status-@(user.Status == true ? "active" : "banned")"><i class="fas fa-circle"></i>@(user.Status == true ? "Online" : "Offline")</span></td>
+            <td>
+                @if (user.IsBan == false)
+                {
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#banUserModal-@user.UserId" title="Cấm">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#unbanUserModal-@user.UserId" title="Bỏ Cấm">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                    </div>
+                }
+            </td>
+        </tr>
+    }
+}
+else
+{
+<tr>
+    <td colspan="5" class="text-center text-muted py-4">
+        <i class="fas fa-info-circle me-2"></i>
+        Không có người dùng nào
+    </td>
+</tr>
 }
