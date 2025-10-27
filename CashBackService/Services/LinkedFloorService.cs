@@ -19,5 +19,6 @@ namespace CashBackService.Services
         public Task AddUserLinkedFloor(UserLinkedFloor linkedFloor) => _linkedFloorRepository.AddUserLinkedFloor(linkedFloor);
         public Task UpdateUserLinkedFloor(UserLinkedFloor linkedFloor) => _linkedFloorRepository.UpdateUserLinkedFloor(linkedFloor);
         public Task<List<UserLinkedFloor>> GetLinkedFloorByUserId(int id) => _linkedFloorRepository.GetLinkedFloorByUserId(id);
+        public Task<UserLinkedFloor> GetLinkedFloorByUserIdAndFloorId(int userId, int floorId) => _linkedFloorRepository.GetLinkedFloorByUserIdAndFloorId(userId, floorId);
     }
 }

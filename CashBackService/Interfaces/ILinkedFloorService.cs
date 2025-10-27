@@ -12,5 +12,6 @@ namespace CashBackService.Interfaces
         Task AddUserLinkedFloor(UserLinkedFloor linkedFloor);
         Task UpdateUserLinkedFloor(UserLinkedFloor linkedFloor);
         Task<List<UserLinkedFloor>> GetLinkedFloorByUserId(int id);
+        Task<UserLinkedFloor> GetLinkedFloorByUserIdAndFloorId(int userId, int floorId);
     }
 }

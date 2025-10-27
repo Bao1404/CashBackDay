@@ -19,5 +19,6 @@ namespace CashBackRepositories.Repositories
         public Task AddUserLinkedFloor(UserLinkedFloor linkedFloor) => _dao.AddUserLinkedFloor(linkedFloor);
         public Task UpdateUserLinkedFloor(UserLinkedFloor linkedFloor) => _dao.UpdateUserLinkedFloor(linkedFloor);
         public Task<List<UserLinkedFloor>> GetLinkedFloorByUserId(int id) => _dao.GetLinkedFloorByUserId(id);
+        public Task<UserLinkedFloor> GetLinkedFloorByUserIdAndFloorId(int userId, int floorId) => _dao.GetLinkedFloorByUserIdAndFloorId(userId, floorId);
     }
 }

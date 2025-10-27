@@ -179,6 +179,34 @@ namespace CashBackDay.Controllers
                 return RedirectToAction("TradingFloor", "User");
             }
         }
+        [HttpPost("update-uid")]
+        public async Task<IActionResult> UpdateUid(IFormCollection form)
+        {
+            var floorId = int.Parse(form["floorId"]);
+            var userId = currentUser.Value;
+            var uid = form["uid"];
+            try
+            {
+                var linkedFloor = await _linkedFloorService.GetLinkedFloorByUserIdAndFloorId(currentUser.Value, floorId);
+                if (linkedFloor != null)
+                {
+                    linkedFloor.UserUid = uid;
+                    await _linkedFloorService.UpdateUserLinkedFloor(linkedFloor);
+                    TempData["Message"] = "Cập nhật UID thành công";
+                    TempData["Type"] = "success";
+                    return RedirectToAction("TradingFloor", "User");
+                }
+                TempData["Message"] = "Cập nhật UID thất bại";
+                TempData["Type"] = "error";
+                return RedirectToAction("TradingFloor", "User");
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = ex.ToString();
+                TempData["Type"] = "error";
+                return RedirectToAction("TradingFloor", "User");
+            }
+        }
         public async Task<IActionResult> Turtorial()
         {
             if(currentUser == null)

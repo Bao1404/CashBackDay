@@ -29,5 +29,9 @@ namespace CashBackDAO
         {
             return await _context.UserLinkedFloors.Include(u => u.User).Include(u => u.Floor).Where(u => u.UserId == id).ToListAsync();
         }
+        public async Task<UserLinkedFloor> GetLinkedFloorByUserIdAndFloorId(int userId, int floorId)
+        {
+            return await _context.UserLinkedFloors.FirstOrDefaultAsync(u => u.UserId == userId && u.FloorId == floorId);
+        }
     }
 }
