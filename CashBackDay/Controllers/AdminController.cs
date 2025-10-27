@@ -363,5 +363,15 @@ namespace CashBackDay.Controllers
             ViewBag.Requests = await _requestService.GetAllContactRequests();
             return RedirectToAction("ManageRequest", "Admin");
         }
+        public IActionResult ManageAffiliate()
+        {
+            ViewData["ActiveMenu"] = "ManageAffiliate";
+            return View();
+        }
+        public IActionResult ManageRefund()
+        {
+            ViewData["ActiveMenu"] = "ManageRefund";
+            return View();
+        }
     }
 }

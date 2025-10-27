@@ -4,34 +4,34 @@
 *@
 @{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-    ViewData["Title"] = "Quản lý người dùng";
+    ViewData["Title"] = "Quản lý hoàn tiền";
     List<User> users = ViewBag.Users;
 }
 <main class="admin-main">
     <!-- Users Section -->
     <h2 class="section-title">
-        <i class="fas fa-users me-3"></i>
-        Quản lý người dùng
+        <i class="fas fa-money-bill-wave me-3"></i>
+        Quản lý hoàn tiền
     </h2>
     <div class="section-header">
-        <div class="col-xl-3 col-md-6 mb-3">
+        @* <div class="col-xl-3 col-md-6 mb-3">
             <div class="revenue-card primary">
                 <div class="card-icon">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-handshake"></i>
                 </div>
                 <div class="card-content">
-                    <h3 class="card-number" >@users.Count()</h3>
+                    <h3 class="card-number"></h3>
                     <p class="card-label">Tổng người dùng</p>
                 </div>
             </div>
-        </div>
+        </div> *@
         <div class="section-actions">
-            <form id="userSearchForm">
+            @* <form id="userSearchForm">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" class="form-control" name="input" placeholder="Tìm kiếm người dùng...">
                 </div>
-            </form>
+            </form> *@
             @* <form id="userStatusForm" style="display:flex; align-items:center; gap:20px;">
                 <select class="form-select filter-select" name="status">
                     <option value="">Tất cả trạng thái</option>
@@ -46,11 +46,11 @@
         <div class="card-header">
             <h5 class="card-title">
                 <i class="fas fa-list me-2"></i>
-                Danh sách người dùng
+                Danh sách hoàn tiền
             </h5>
             <div class="card-actions">
                 <div class="btn-group" role="group">
-                    <a asp-controller="Admin" asp-action="ManageUser" class="btn btn-outline-info btn-sm">
+                    <a asp-controller="Admin" asp-action="ManageRefund" class="btn btn-outline-info btn-sm">
                         <i class="fas fa-sync me-1"></i>Làm mới
                     </a>
                 </div>
@@ -61,18 +61,36 @@
                 <table class="table table-hover" id="usersTable">
                     <thead>
                         <tr>
-                            <th>Người dùng</th>
                             <th>Email</th>
-                            <th>Số điện thoại</th>
-                            <th>Ngày đăng ký</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
+                            <th>UID</th>
+                            <th>Sàn</th>
+                            <th>Phần trăm hoàn tiền</th>
+                            <th>Hoa hồng</th>
+                            <th>Tiền hoàn</th>
+                            <th>Ngày</th>
                         </tr>
                     </thead>
-                        <tbody id="usersTableBody">
-                            <partial name="Partials/_ListUserPartial" />
-                        </tbody>
-                    </table>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td>example@gmail.com</td>
+                            <td>1158004492</td>
+                            <td>Binance</td>
+                            <td>30%</td>
+                            <td>1200 USDT</td>
+                            <td>360 USDT</td>
+                            <td>10/21/2025 8:28:12 PM</td>
+                        </tr>
+                        <tr>
+                            <td>example1@gmail.com</td>
+                            <td>513335720</td>
+                            <td>Bybit</td>
+                            <td>40%</td>
+                            <td>4500 USDT</td>
+                            <td>1800 USDT</td>
+                            <td>10/16/2025 10:18:37 AM</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -105,7 +123,7 @@
 </main>
 
 <!-- Ban User Confirmation Modal -->
-@foreach (var user in users)
+@* @foreach (var user in users)
 {
     <div class="modal fade" id="banUserModal-@user.UserId" tabindex="-1">
         <form method="POST" action="/ban">
@@ -124,8 +142,8 @@
                         <div class="mb-3">
                             <label class="form-label">Tên tài khoản</label>
                             <input class="form-control" value="@user.FullName" readonly />
-                        </div>
-                        @* <div class="mb-3">
+                        </div> *@
+@* <div class="mb-3">
                     <label class="form-label">Thời gian cấm</label>
                     <select class="form-select" id="banDuration">
                         <option value="permanent">Vĩnh viễn</option>
@@ -134,7 +152,7 @@
                         <option value="1">1 ngày</option>
                     </select>
                 </div> *@
-                    </div>
+@*                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-danger">Xác nhận cấm</button>
@@ -143,10 +161,10 @@
             </div>
         </form>
     </div>
-}
+} *@
 
 <!-- UnBan User Confirmation Modal -->
-@foreach (var user in users)
+@* @foreach (var user in users)
 {
     <div class="modal fade" id="unbanUserModal-@user.UserId" tabindex="-1">
         <form method="POST" action="/unban">
@@ -165,8 +183,8 @@
                         <div class="mb-3">
                             <label class="form-label">Tên tài khoản</label>
                             <input class="form-control" value="@user.FullName" readonly />
-                        </div>
-                        @* <div class="mb-3">
+                        </div> *@
+@* <div class="mb-3">
                     <label class="form-label">Thời gian cấm</label>
                     <select class="form-select" id="banDuration">
                         <option value="permanent">Vĩnh viễn</option>
@@ -175,7 +193,7 @@
                         <option value="1">1 ngày</option>
                     </select>
                 </div> *@
-                    </div>
+@*                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-danger">Xác nhận bỏ cấm</button>
@@ -184,7 +202,7 @@
             </div>
         </form>
     </div>
-}
+} *@
 
 <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
 
