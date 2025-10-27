@@ -33,6 +33,7 @@ namespace CashBackDay
             builder.Services.AddScoped<ConversationDAO>();
             builder.Services.AddScoped<MessageDAO>();
             builder.Services.AddScoped<ContactRequestDAO>();
+            builder.Services.AddScoped<LinkedFloorDAO>();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ITransactionRepository, TransactionHistoryRepository>();
@@ -41,6 +42,7 @@ namespace CashBackDay
             builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
             builder.Services.AddScoped<IMessageRepository, MessageRepository>();
             builder.Services.AddScoped<IRequestRepository, RequestRepository>();
+            builder.Services.AddScoped<ILinkedFloorRepository, LinkedFloorRepository>();
 
             builder.Services.AddScoped<ITransactionHistoryService, TransactionService>();
             builder.Services.AddScoped<IUserService, UserService>();
@@ -48,6 +50,7 @@ namespace CashBackDay
             builder.Services.AddScoped<IVideoService, VideoService>();
             builder.Services.AddScoped<IConversationService, ConversationService>();
             builder.Services.AddScoped<IMessageService, MessageService>();
+            builder.Services.AddScoped<ILinkedFloorService, LinkedFloorService>();
 
             builder.Services.AddSignalR();
             builder.Services.AddScoped<IRequestService, RequestService>();

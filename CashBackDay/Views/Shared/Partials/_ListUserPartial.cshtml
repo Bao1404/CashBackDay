@@ -18,7 +18,7 @@
         <td class="registration-date">
             @user.CreateAt.ToString("dd/MM/yyyy")
         </td>
-        <td><span class="status-badge status-@(user.Status == true ? "active" : "banned")"><i class="fas fa-circle"></i>@(user.IsBan == false ? "Hoạt Động" : "Bị Cấm")</span></td>
+        <td><span class="status-badge status-@(user.Status == true ? "active" : "banned")"><i class="fas fa-circle"></i>@(user.Status == true ? "Online" : "Offline")</span></td>
         <td>
             @if (user.IsBan == false)
             {

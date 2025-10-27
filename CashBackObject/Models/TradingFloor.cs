@@ -28,4 +28,6 @@ public partial class TradingFloor
     public virtual ICollection<AffiliateCommission> AffiliateCommissions { get; set; } = new List<AffiliateCommission>();
 
     public virtual ICollection<TransactionHistory> TransactionHistories { get; set; } = new List<TransactionHistory>();
+
+    public virtual ICollection<UserLinkedFloor> UserLinkedFloors { get; set; } = new List<UserLinkedFloor>();
 }
