@@ -1,6 +1,7 @@
 ﻿using CashBackObject.Models;
 using CashBackService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace CashBackDay.Controllers
 {
@@ -10,13 +11,15 @@ namespace CashBackDay.Controllers
         private readonly ITradingFloorService _tradingFloorService;
         private readonly IVideoService _videoService;
         private readonly IRequestService _requestService;
+        private readonly ILinkedFloorService _linkedFloorService;
         private int? currentUser => HttpContext.Session.GetInt32("UserId");
-        public UserController(IUserService userService, ITradingFloorService tradingFloorService, IVideoService videoService, IRequestService requestService)
+        public UserController(IUserService userService, ITradingFloorService tradingFloorService, IVideoService videoService, IRequestService requestService, ILinkedFloorService linkedFloorService)
         {
             _userService = userService;
             _tradingFloorService = tradingFloorService;
             _videoService = videoService;
             _requestService = requestService;
+            _linkedFloorService = linkedFloorService;
         }
         public IActionResult Contact()
         {
@@ -138,15 +141,43 @@ namespace CashBackDay.Controllers
             ViewData["ActiveMenu"] = "RefundPage";
             return View();
         }
-        public IActionResult TradingFloor()
+        public async Task<IActionResult> TradingFloor()
         {
             if(currentUser == null)
             {
                 return RedirectToAction("Index", "Login");
             }
+            var list = await _linkedFloorService.GetLinkedFloorByUserId(currentUser.Value);
+            ViewBag.LinkedFloors = list.Select(x => x.FloorId).ToList();
             ViewBag.Floors =  _tradingFloorService.GetAllTradingFloorsAsync().Result;
             ViewData["ActiveMenu"] = "FloorPage";
             return View();
+        }
+        [HttpPost("add-linked-floor")]
+        public async Task<IActionResult> AddLinkedFloor(IFormCollection form)
+        {
+            var floorId = int.Parse(form["floorId"]);
+            var userId = currentUser.Value;
+            var uid = form["uid"];
+            try
+            {
+                var linkedFloor = new UserLinkedFloor
+                {
+                    FloorId = floorId,
+                    UserId = userId,
+                    UserUid = uid,
+                };
+                await _linkedFloorService.AddUserLinkedFloor(linkedFloor);
+                TempData["Message"] = "Liên kết sàn giao dịch thành công";
+                TempData["Type"] = "success";
+                return RedirectToAction("TradingFloor", "User");
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = ex.ToString();
+                TempData["Type"] = "error";
+                return RedirectToAction("TradingFloor", "User");
+            }
         }
         public async Task<IActionResult> Turtorial()
         {

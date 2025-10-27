@@ -1,8 +1,10 @@
-﻿@*
+﻿@using CashBackObject.Models
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
     ViewData["Title"] = "Sàn Giao Dịch";
+    List<int?> list = ViewBag.LinkedFloors;
 }
 <!-- Main Content -->
 <main class="main-content">
@@ -95,11 +97,30 @@
                                 <h5 class="card-title">@floor.FloorName</h5>
                                 <p class="card-subtitle">Mã giới thiệu: @floor.InviteCode</p>
 
-                                <div class="floor-actions d-flex gap-2">
-                                    <a href="@floor.FloorUrl" target="_blank" class="btn btn-warning flex-fill">
-                                        <i class="fas fa-link me-1"></i>Kết Nối
-                                    </a>
-                                </div>
+                                @if (list.Contains(floor.FloorId))
+                                {
+                                    <div class="row">
+                                        <div class="col-md-6 p-1 floor-actions d-flex gap-2">
+                                            <a href="@floor.FloorUrl" target="_blank" class="btn btn-warning flex-fill">
+                                                <i class="fas fa-link me-1"></i>Đi đến sàn
+                                            </a>
+                                        </div>
+
+                                        <div class="col-md-6 p-1 floor-actions d-flex gap-2">
+                                            <button class="btn btn-warning flex-fill" data-bs-toggle="modal" data-bs-target="#updateUid-@floor.FloorId">
+                                                <i class="fa-solid fa-pen-to-square"></i>Thay đổi UID
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="floor-actions d-flex gap-2">
+                                        <button class="btn btn-warning flex-fill" data-bs-toggle="modal" data-bs-target="#connectFloorModal-@floor.FloorId">
+                                            <i class="fas fa-link me-1"></i>Kết nối
+                                        </button>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -130,26 +151,87 @@
     </div>
 </main>
 
-<!-- Trading Floor Detail Modal -->
-<div class="modal fade" id="floorDetailModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content custom-modal">
-            <div class="modal-header">
-                <h5 class="modal-title" id="floorDetailTitle">Chi Tiết Sàn Giao Dịch</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="floorDetailBody">
-                <!-- Content will be populated by JavaScript -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-warning" id="connectFloorBtn">Kết Nối Ngay</button>
+<!-- Connect Floor Modal -->
+@foreach (var floor in ViewBag.Floors)
+{
+    <div class="modal fade" id="connectFloorModal-@floor.FloorId" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Kết Nối Sàn Giao Dịch</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="/add-linked-floor" id="connectFloorForm">
+                    <input type="text" value="@floor.FloorId" name="floorId" hidden/>
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Vui lòng nhập UID của bạn bên sàn để kết nối và bắt đầu nhận hoàn tiền.
+                        </div>
+                        <div class="mb-3">
+                            <label for="referralCode" class="form-label">Sàn giao dịch</label>
+                            <input type="text" class="form-control custom-input" value="@floor.FloorName" id="floorName" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">UID của bạn tại @floor.FloorName</label>
+                            <input type="text" class="form-control custom-input" name="uid" required>
+                        </div>
+                        @* <div class="mb-3">
+                            <label for="userPhone" class="form-label">Email đăng nhập của bạn</label>
+                            <input type="email" class="form-control custom-input" id="email" required>
+                        </div> *@
+                    </div>
+                    <div class="p-3" style="text-align:end;">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-success">Lưu</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
+}
 
-<!-- Connect Floor Modal -->
+<!--Update UID Modal-->
+@foreach (var floor in ViewBag.Floors)
+{
+    <div class="modal fade" id="updateUid-@floor.FloorId" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sửa đổi UID</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="/add-linked-floor" id="connectFloorForm">
+                    <input type="text" value="@floor.FloorId" name="floorId" hidden />
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Vui lòng nhập UID của bạn bên sàn để kết nối và bắt đầu nhận hoàn tiền.
+                        </div>
+                        <div class="mb-3">
+                            <label for="referralCode" class="form-label">Sàn giao dịch</label>
+                            <input type="text" class="form-control custom-input" value="@floor.FloorName" id="floorName" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">UID của bạn tại @floor.FloorName</label>
+                            <input type="text" class="form-control custom-input" name="uid" required>
+                        </div>
+                        @* <div class="mb-3">
+                            <label for="userPhone" class="form-label">Email đăng nhập của bạn</label>
+                            <input type="email" class="form-control custom-input" id="email" required>
+                        </div> *@
+                    </div>
+                    <div class="p-3" style="text-align:end;">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-success">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@* <!-- Connect Floor Modal -->
 <div class="modal fade" id="connectFloorModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content custom-modal">
@@ -160,7 +242,7 @@
             <div class="modal-body">
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle me-2"></i>
-                    Vui lòng nhập mã giới thiệu để kết nối với sàn giao dịch và bắt đầu nhận hoàn tiền.
+                    Vui lòng nhập UID của bạn bên sàn để kết nối và bắt đầu nhận hoàn tiền.
                 </div>
                 <form id="connectFloorForm">
                     <div class="mb-3">
@@ -187,6 +269,51 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 <button type="button" class="btn btn-success" onclick="connectToFloorProcess()">Xác Nhận Kết Nối</button>
             </div>
+        </div>
+    </div>
+</div> *@
+
+<div class="modal fade" id="addVideoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEditPlatformTitle">Thêm video mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addVideoForm">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Tiêu đề</label>
+                                <input type="text" class="form-control custom-input" name="title">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Thể loại</label>
+                                <input type="text" class="form-control custom-input" name="category">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea class="form-control custom-input" name="description" rows="3" placeholder="Mô tả ..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Link</label>
+                        <input type="url" class="form-control custom-input" name="videoUrl" placeholder="https://example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ảnh</label>
+                        <input type="text" class="form-control custom-input" name="imgUrl" placeholder="https://imgURL">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-success" id="saveVideoBtn">Thêm video</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

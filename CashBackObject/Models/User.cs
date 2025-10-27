@@ -41,5 +41,7 @@ public partial class User
 
     public virtual ICollection<TransactionHistory> TransactionHistories { get; set; } = new List<TransactionHistory>();
 
+    public virtual ICollection<UserLinkedFloor> UserLinkedFloors { get; set; } = new List<UserLinkedFloor>();
+
     public virtual ICollection<Wallet> Wallets { get; set; } = new List<Wallet>();
 }
